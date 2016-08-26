@@ -26,7 +26,7 @@ for (let {index, breakType} of iterator) {
 }
 
 // logs the following to the console:
-// index: 4 breakType: letter
+// index: 3 breakType: letter
 ```
 
 ## API
