@@ -41,7 +41,25 @@ This method creates a new `%SegmentIterator%` over the input string, which will 
 
 ### `%SegmentIterator%`
 
-This class iterates over segment boundaries of a particular string. The `next` method finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `index` and `breakType`.
+This class iterates over segment boundaries of a particular string.
+
+### `%SegmentIterator%.prototype.next`
+
+The `next` method finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `index` and `breakType`.
+
+### Additional low-level way to read segments
+
+#### `%SegmentIterator%.prototype.advance`
+
+Move to the next segment (same as `next` but returns `undefined).
+
+#### `%SegmentIterator%.prototype.index`
+
+Return the index of the current segment (which is the last one returned by `next`).
+
+#### `%SegmentIterator%.prototype.breakType`
+
+The `breakType` of the current segment.
 
 ## Further work
 
