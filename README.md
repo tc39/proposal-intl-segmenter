@@ -51,7 +51,7 @@ The `next` method finds the next boundary and returns an `IterationResult`, wher
 
 #### `%SegmentIterator%.prototype.advance`
 
-Move to the next segment (same as `next` but returns `undefined).
+Move to the next segment (same as `next` but returns `undefined`).
 
 #### `%SegmentIterator%.prototype.index`
 
