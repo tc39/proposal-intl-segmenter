@@ -31,6 +31,8 @@ for (let {index, breakType} of iterator) {
 
 ## API
 
+[polyfill](https://gist.github.com/inexorabletash/8c4d869a584bcaa18514729332300356)
+
 ### `Intl.Segmenter(locale, options)`
 
 The only option here, for now, is `type`, which may be `grapheme`, `word`, `sentence` or `line`.
