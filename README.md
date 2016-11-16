@@ -37,7 +37,9 @@ for (let {index, breakType} of iterator) {
 
 ### `Intl.Segmenter(locale, options)`
 
-The only option here, for now, is `type`, which may be `grapheme`, `word`, `sentence` or `line`.
+Interpretation of options:
+- `granularity`, which may be `grapheme`, `word`, `sentence` or `line`.
+- `strength`, valid only for `line` granularity, which may be `'strict'`, `'normal'`, or `'loose'`, following CSS3.
 
 ### `Intl.Segmenter.prototype.segment(string)`
 
@@ -47,21 +49,29 @@ This method creates a new `%SegmentIterator%` over the input string, which will 
 
 This class iterates over segment boundaries of a particular string.
 
-### `%SegmentIterator%.prototype.next`
+### Methods on %SegmentIterator%:
 
-The `next` method finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `substring` and `breakType`. The `substring` contains the 
+#### `%SegmentIterator%.prototype.next()`
 
-### Additional low-level way to read segments
+The `next` method, to use finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `segment` and `breakType`. The `segment` contains the relevant subsring; the `breakType` describes which sort of segment it is (TODO: define possible values, not part of UTS). This method defines the iteration protocol support for SegmentIterators, and is present for convenience; other methods expose a richer API.
 
-#### `%SegmentIterator%.prototype.advance`
+#### `%SegmentIterator%.prototype.advance()`
 
-Move to the next segment (same as `next` but returns `undefined`).
+Move the iterator to the next segment, returning `undefined`.
 
-#### `%SegmentIterator%.prototype.index`
+#### `%SegmentIterator%.prototype.rewind()`
 
-Return the index of the current segment (which is the last one returned by `next`).
+Move the iterator to the previous segment, returning `undefined`.
 
-#### `%SegmentIterator%.prototype.breakType`
+#### `%SegmentIterator%.prototype.jump(offset)`
+
+Move the iterator to the index in the input string indicated by the offset, returning `undefined`.
+
+#### `%SegmentIterator%.prototype.index()`
+
+Return the index of the current segment, as an offset from the beginning of the string.
+
+#### `%SegmentIterator%.prototype.breakType()`
 
 The `breakType` of the current segment.
 
@@ -82,7 +92,3 @@ A: Hyphenation is expected to have a different sort of API shape for various rea
 - There may be hyphenation breaks of different priorities
 - Hyphenation plays into line layout and font rendering in a more complex way, and we might want to expose it at that level (e.g., in the Web Platform rather than ECMAScript)
 - Hyphenation is just a less well-developed thing in the internationalization world. CLDR and ICU don't support it yet; certain web browsers are only getting support for it now in CSS. It's often not done perfectly. It could use some more time to bake. By contrast, word, grapheme, sentence and line breaks have been in the Unicode specification for a long time; this is a shovel-ready project.
-
-## Further work
-
-- Hyphenization API
