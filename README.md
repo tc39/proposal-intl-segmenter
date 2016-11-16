@@ -63,17 +63,17 @@ Move the iterator to the next break position, returning `undefined`.
 
 Move the iterator to the previous break position, returning `undefined`.
 
-#### `%SegmentIterator%.prototype.jump(offset)`
+#### `%SegmentIterator%.prototype.end()`
 
-Move the iterator to the index in the input string indicated by the offset, returning `undefined`.
+Move the iterator to the index after the end of the string, returning `undefined`. This is useful for reverse iteration with `rewind()`.
 
 #### `get %SegmentIterator%.prototype.index`
 
-Return the index of the most recently discovered break position, as an offset from the beginning of the string, or if called immediately after `jump()`, the adopted position. Initially the `index` is 0.
+Return the index of the most recently discovered break position, as an offset from the beginning of the string. Initially the `index` is 0, and it is the length of the string after a call to `end()`.
 
 #### `get %SegmentIterator%.prototype.breakType`
 
-The `breakType` of the most recently discovered segment. Throws if called immediately after `jump()`, as there is no relevant break type.
+The `breakType` of the most recently discovered segment.
 
 ## FAQ
 
