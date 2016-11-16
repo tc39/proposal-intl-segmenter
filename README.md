@@ -69,7 +69,7 @@ Move the iterator to the index in the input string indicated by the offset, retu
 
 #### `%SegmentIterator%.prototype.index()`
 
-Return the index of the current segment, as an offset from the beginning of the string.
+Return the index of the beginning current segment, as an offset from the beginning of the string.
 
 #### `%SegmentIterator%.prototype.breakType()`
 
