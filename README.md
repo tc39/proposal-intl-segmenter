@@ -71,7 +71,7 @@ Move the iterator to the index in the input string indicated by the offset, retu
 
 Return the index of the most recently discovered break position, as an offset from the beginning of the string, or if called immediately after `jump()`, the adopted position. Initially the `index` is 0.
 
-#### `%SegmentIterator%.prototype.breakType()`
+#### `get %SegmentIterator%.prototype.breakType`
 
 The `breakType` of the most recently discovered segment. Throws if called immediately after `jump()`, as there is no relevant break type.
 
