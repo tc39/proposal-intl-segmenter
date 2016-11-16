@@ -33,13 +33,13 @@ for (let {segment, breakType} of iterator) {
 
 ## API
 
-[polyfill](https://gist.github.com/inexorabletash/8c4d869a584bcaa18514729332300356)
+[polyfill](https://gist.github.com/inexorabletash/8c4d869a584bcaa18514729332300356) for a historical snapshot of this proposal
 
 ### `Intl.Segmenter(locale, options)`
 
 Interpretation of options:
 - `granularity`, which may be `grapheme`, `word`, `sentence` or `line`.
-- `strength`, valid only for `line` granularity, which may be `'strict'`, `'normal'`, or `'loose'`, following CSS3.
+- `strength`, valid only for `line` granularity, which may be `'strict'`, `'normal'`, or `'loose'`, following CSS Text Module Level 3.
 
 ### `Intl.Segmenter.prototype.segment(string)`
 
