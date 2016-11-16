@@ -1,5 +1,7 @@
 # `Intl.Segmenter`: Unicode segmentation in JavaScript
 
+Stage 1 proposal, champion Daniel Ehrenberg (Google)
+
 ## Motivation
 
 A code point is not a "letter" or a displayed unit on the screen. That designation goes to the grapheme, which can consist of multiple code points (e.g., including accent marks, conjoining Korean characters). Unicode defines a grapheme segmentation algorithm to find the boundaries between graphemes. This may be useful in implementing advanced editors/input methods, or other forms of text processing.
@@ -47,7 +49,7 @@ This class iterates over segment boundaries of a particular string.
 
 ### `%SegmentIterator%.prototype.next`
 
-The `next` method finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `index` and `breakType`.
+The `next` method finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `substring` and `breakType`. The `substring` contains the 
 
 ### Additional low-level way to read segments
 
@@ -72,6 +74,14 @@ A: The situation is a little more complicated, e.g., for Indic scripts. Work is 
 Q: Shouldn't we be putting new APIs in built-in modules?
 
 A: If built-in modules come out before this gets to Stage 3, that sounds like a good option. However, so far the idea in TC39 has been in TC39 not to block either thing on the other. Built-in modules still have some big questions to resolve, e.g., how/whether polyfills should interact with them.
+
+Q: Why is hyphenation not included?
+
+A: Hyphenation is expected to have a different sort of API shape for various reasons:
+- Adding a hyphenation break may change the spelling of the affected text
+- There may be hyphenation breaks of different priorities
+- Hyphenation plays into line layout and font rendering in a more complex way, and we might want to expose it at that level (e.g., in the Web Platform rather than ECMAScript)
+- Hyphenation is just a less well-developed thing in the internationalization world. CLDR and ICU don't support it yet; certain web browsers are only getting support for it now in CSS. It's often not done perfectly. It could use some more time to bake. By contrast, word, grapheme, sentence and line breaks have been in the Unicode specification for a long time; this is a shovel-ready project.
 
 ## Further work
 
