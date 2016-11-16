@@ -57,23 +57,23 @@ The `next` method, to use finds the next boundary and returns an `IterationResul
 
 #### `%SegmentIterator%.prototype.advance()`
 
-Move the iterator to the next segment, returning `undefined`.
+Move the iterator to the next break position, returning `undefined`.
 
 #### `%SegmentIterator%.prototype.rewind()`
 
-Move the iterator to the previous segment, returning `undefined`.
+Move the iterator to the previous break position, returning `undefined`.
 
 #### `%SegmentIterator%.prototype.jump(offset)`
 
 Move the iterator to the index in the input string indicated by the offset, returning `undefined`.
 
-#### `%SegmentIterator%.prototype.index()`
+#### `get %SegmentIterator%.prototype.index`
 
-Return the index of the beginning current segment, as an offset from the beginning of the string. Initially the `index` is 0.
+Return the index of the most recently discovered break position, as an offset from the beginning of the string, or if called immediately after `jump()`, the adopted position. Initially the `index` is 0.
 
 #### `%SegmentIterator%.prototype.breakType()`
 
-The `breakType` of the current segment.
+The `breakType` of the most recently discovered segment. Throws if called immediately after `jump()`, as there is no relevant break type.
 
 ## FAQ
 
