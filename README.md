@@ -22,13 +22,13 @@ let segmenter = Intl.Segmenter("fr", {type: "word"});
 let iterator = segmenter.segment("Ceci n'est pas une pipe");
 
 // Iterate over it!
-for (let {index, breakType} of iterator) {
-  console.log(`index: ${index} breakType: ${breakType}`);
+for (let {segment, breakType} of iterator) {
+  console.log(`segment: ${segment} breakType: ${breakType}`);
   break;
 }
 
 // logs the following to the console:
-// index: 3 breakType: letter
+// index: Ceci breakType: letter
 ```
 
 ## API
@@ -53,7 +53,7 @@ This class iterates over segment boundaries of a particular string.
 
 #### `%SegmentIterator%.prototype.next()`
 
-The `next` method, to use finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `segment` and `breakType`. The `segment` contains the relevant subsring; the `breakType` describes which sort of segment it is (TODO: define possible values, not part of UTS). This method defines the iteration protocol support for SegmentIterators, and is present for convenience; other methods expose a richer API.
+The `next` method, to use finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `segment` and `breakType`. The `segment` contains the substring between the previous break location and the newly found break location; the `breakType` describes which sort of segment it is (TODO: define possible values, not part of UTS). This method defines the iteration protocol support for SegmentIterators, and is present for convenience; other methods expose a richer API.
 
 #### `%SegmentIterator%.prototype.advance()`
 
@@ -69,7 +69,7 @@ Move the iterator to the index in the input string indicated by the offset, retu
 
 #### `%SegmentIterator%.prototype.index()`
 
-Return the index of the beginning current segment, as an offset from the beginning of the string.
+Return the index of the beginning current segment, as an offset from the beginning of the string. Initially the `index` is 0.
 
 #### `%SegmentIterator%.prototype.breakType()`
 
