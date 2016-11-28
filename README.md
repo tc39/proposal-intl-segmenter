@@ -16,7 +16,7 @@ Chrome has been shipping its own nonstandard segmentation API called `Intl.v8Bre
 
 ```js
 // Create a segmenter in your locale
-let segmenter = Intl.Segmenter("fr", {type: "word"});
+let segmenter = Intl.Segment("fr", {type: "word"});
 
 // Get an iterator over a string
 let iterator = segmenter.segment("Ceci n'est pas une pipe");
@@ -35,15 +35,19 @@ for (let {segment, breakType} of iterator) {
 
 [polyfill](https://gist.github.com/inexorabletash/8c4d869a584bcaa18514729332300356) for a historical snapshot of this proposal
 
-### `Intl.Segmenter(locale, options)`
+### `Intl.Segment(locale, options)`
 
 Interpretation of options:
 - `granularity`, which may be `grapheme`, `word`, `sentence` or `line`.
 - `strength`, valid only for `line` granularity, which may be `'strict'`, `'normal'`, or `'loose'`, following CSS Text Module Level 3.
 
-### `Intl.Segmenter.prototype.segment(string)`
+### `Intl.Segment.prototype.segment(string)`
 
 This method creates a new `%SegmentIterator%` over the input string, which will lazily find breaks.
+
+### `Intl.Segment.prototype.reverseSegment(string)`
+
+This method creates a new `%SegmentIterator%` over the input string starting at the end and moving towards the beginning.
 
 ### `%SegmentIterator%`
 
@@ -57,19 +61,11 @@ The `next` method, to use finds the next boundary and returns an `IterationResul
 
 #### `%SegmentIterator%.prototype.advance()`
 
-Move the iterator to the next break position, returning `undefined`.
-
-#### `%SegmentIterator%.prototype.rewind()`
-
-Move the iterator to the previous break position, returning `undefined`.
-
-#### `%SegmentIterator%.prototype.end()`
-
-Move the iterator to the index after the end of the string, returning `undefined`. This is useful for reverse iteration with `rewind()`.
+Move the iterator to the next break position, returning `undefined`. If the SegmentIterator was created by `reverseSegment`, it finds the previous break position.
 
 #### `get %SegmentIterator%.prototype.index`
 
-Return the index of the most recently discovered break position, as an offset from the beginning of the string. Initially the `index` is 0, and it is the length of the string after a call to `end()`.
+Return the index of the most recently discovered break position, as an offset from the beginning of the string. Initially the `index` is 0 for the result of a call to `segment`, and it is the length of the string after a call to `reverseSegment()`.
 
 #### `get %SegmentIterator%.prototype.breakType`
 
