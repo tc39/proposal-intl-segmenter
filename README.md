@@ -74,11 +74,11 @@ The `breakType` of the most recently discovered segment.
 
 Q: Why should we pass a locale and options bag for grapheme breaks? Isn't there just one way to do it?
 
-A: The situation is a little more complicated, e.g., for Indic scripts. Work is ongoing to support grapheme break options for these scripts better; see See [this bug](http://unicode.org/cldr/trac/ticket/2142), and in particular [this CLDR wiki page](http://cldr.unicode.org/development/development-process/design-proposals/grapheme-usage). Seems like CLDR/ICU don't support this yet, but it's planned.
+A: The situation is a little more complicated, e.g., for Indic scripts. Work is ongoing to support grapheme break options for these scripts better; see [this bug](http://unicode.org/cldr/trac/ticket/2142), and in particular [this CLDR wiki page](http://cldr.unicode.org/development/development-process/design-proposals/grapheme-usage). Seems like CLDR/ICU don't support this yet, but it's planned.
 
 Q: Shouldn't we be putting new APIs in built-in modules?
 
-A: If built-in modules come out before this gets to Stage 3, that sounds like a good option. However, so far the idea in TC39 has been in TC39 not to block either thing on the other. Built-in modules still have some big questions to resolve, e.g., how/whether polyfills should interact with them.
+A: If built-in modules come out before this gets to Stage 3, that sounds like a good option. However, so far the idea in TC39 has been not to block either thing on the other. Built-in modules still have some big questions to resolve, e.g., how/whether polyfills should interact with them.
 
 Q: Why is hyphenation not included?
 
