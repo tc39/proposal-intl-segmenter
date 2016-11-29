@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<pre class="metadata">
+title: Intl.Segmenter Proposal
+status: proposal
+stage: 1
+location: https://github.com/tc39/proposal-intl-segmenter
+copyright: false
+contributors: Daniel Ehrenberg
+</pre>
+<script src="ecmarkup.js" defer></script>
+<link rel="stylesheet" href="ecmarkup.css">
+
+<emu-clause id="segmenter-objects">
+  <h1>Segmenter Objects</h1>
+
+  <emu-clause id="sec-intl-segmenter-constructor">
+    <h1>The Intl.Segmenter Constructor</h1>
+
+    <p>
+      The Segmenter constructor is a standard built-in property of the Intl object.</p>
+
+    <emu-clause id="sec-Intl.Segmenter">
+      <h1>Intl.Segmenter ([ locales [ , options ]])</h1>
+
+      <p>
+        When the *Intl.Segmenter* function is called with optional arguments the following steps are taken:
+      </p>
+
+      <emu-alg>
+        1. If NewTarget is *undefined*, let _newTarget_ be the active function object, else let _newTarget_ be NewTarget.
+        1. Let _segmenter_ be ? OrdinaryCreateFromConstructor(_newTarget_, *%SegmenterPrototype%*).
+        1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
+        1. Let _opt_ be a new Record.
+        1. Let _matcher_ be ? GetOption(_options_, *"localeMatcher"*, *"string"*, &laquo; *"lookup"*, *"best fit"* &raquo;, *"best fit"*).
+        1. Set _opt_.[[localeMatcher]] to _matcher_.
+        1. Let _r_ be ResolveLocale(%Segmenter%.[[AvailableLocales]], _requestedLocales_, _opt_, %Segmenter%.[[RelevantExtensionKeys]]).
+        1. Set _segmenter_.[[Locale]] to the value of _r_.[[Locale]].
+        1. If _options_ is *undefined*, then
+          1. Let _options_ be ObjectCreate(*%ObjectPrototype%*).
+        1. Else
+          1. Let _options_ be ? ToObject(_options_).
+        1. Let _granularity_ be ? GetOption(_options_, *"granularity"*, *"string"*, « *"grapheme"*, *"word"*, *"sentence"*,  *"line"* », *"grapheme"*).
+        1. Set _segmenter_.[[SegmenterGranularity]] to _granularity_.
+        1. If _granularity_ is *"line"*,
+          1. Let _strength_ be ? GetOption(_options_, *"strength"*, *"string"*,  « *"strict"*, *"normal"*, *"loose"* », *"normal"*).
+          1. Set _segmenter_.[[SegmenterStrength]] to _strength_.
+        1. Return _segmenter_.
+      </emu-alg>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-properties-of-intl-segmenter-constructor">
+    <h1>Properties of the Intl.Segmenter Constructor</h1>
+
+    <p>
+      The Intl.Segmenter constructor has the following properties:
+    </p>
+
+    <emu-clause id="sec-Intl.Segmenter.prototype">
+      <h1>Intl.Segmenter.prototype</h1>
+
+      <p>
+        The value of *Intl.Segmenter.prototype* is *%SegmenterPrototype%*.
+      </p>
+      <p>
+        This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-Intl.Segmenter.supportedLocalesOf">
+      <h1>Intl.Segmenter.supportedLocalesOf (locales [, options ])</h1>
+
+      <p>
+        When the *supportedLocalesOf* method of *%Segmenter%* is called, the following steps are taken:
+      </p>
+
+      <emu-alg>
+        1. Let _availableLocales_ be *%Segmenter%*.[[AvailableLocales]].
+        1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
+        1. Return ? SupportedLocales(_availableLocales_, _requestedLocales_, _options_).
+      </emu-alg>
+
+      <p>
+        The value of the *length* property of the *supportedLocalesOf* method is 1.
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-Intl.Segmenter-internal-slots">
+      <h1>Internal slots</h1>
+
+      <p>
+        The value of the [[AvailableLocales]] internal slot is implementation defined within the constraints described in <emu-xref href="#sec-segmenter-internal-slots"></emu-xref>.
+      </p>
+
+      <p>
+        The value of the [[RelevantExtensionKeys]] internal slot is *[]*.
+      </p>
+
+      <emu-note>
+        CLDR defines several extension keys, but this specification does not expose them.
+        <!-- TODO(littledan): Is there one for strength that should be exposed? -->
+      </emu-note>
+
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-properties-of-intl-segmenter-prototype-object">
+    <h1>Properties of the Intl.Segmenter Prototype Object</h1>
+
+    <p>
+      The Intl.Segmenter prototype object, referred to as *%SegmenterPrototype%*, is itself an ordinary object. It is not a Segmenter instance, and has no instance-like internal slots.
+    </p>
+
+    <emu-clause id="sec-Intl.Segmenter.prototype.constructor">
+      <h1>Intl.Segmenter.prototype.constructor</h1>
+
+      <p>
+        The initial value of *Intl.Segmenter.prototype.constructor* is *%Segmenter%*.
+      </p>
+    </emu-clause>
+
+    <emu-clause id="sec-Intl.Segmenter.prototype.segment" aoid="Intl.Segmenter.prototype.segment">
+      <h1>Intl.Segmenter.prototype.segment( string )</h1>
+
+      <p>
+        When the *Intl.Segmenter.prototype.segment* is called with an argument _string_, the following steps are taken:
+      </p>
+
+      <emu-alg>
+        1. Let _segment_ be *this* value.
+        1. If Type(_segment_) is not Object or _segment_ does not have an [[SegmenterGranularity]] internal slot, throw a *TypeError* exception.
+        1. Let _string_ be ? ToString(_string_).
+        1. Return ? CreateSegmentIterator(_segment_, _string_, ~forwards~).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-Intl.Segmenter.prototype.reverseSegment" aoid="Intl.Segmenter.prototype.reverseSegment">
+      <h1>Intl.Segmenter.prototype.reverseSegment( string )</h1>
+
+      <p>
+        When the *Intl.Segmenter.prototype.reverseSegment* is called with an argument _string_, the following steps are taken:
+      </p>
+
+      <emu-alg>
+        1. Let _segment_ be *this* value.
+        1. If Type(_segment_) is not Object or _segment_ does not have an [[SegmenterGranularity]] internal slot, throw a *TypeError* exception.
+        1. Let _string_ be ? ToString(_string_).
+        1. Return ? CreateSegmentIterator(_segment_, _string_, ~backwards~).
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-Intl.Segmenter.prototype.resolvedOptions">
+      <h1>Intl.Segmenter.prototype.resolvedOptions ()</h1>
+
+      <p>
+        This function provides access to the locale and options computed during initialization of the object.
+      </p>
+      <p>
+        The function returns a new object whose properties and attributes are set as if constructed by an object literal assigning to each of the following properties the value of the corresponding internal slot of this Segmenter object. (see <emu-xref href="#sec-segmenter-internal-slots"></emu-xref>): locale, granularity and strength. Properties whose corresponding internal slots are not present are not assigned.
+      </p>
+    </emu-clause>
+  </emu-clause>
+
+  <emu-clause id="sec-segmenter-internal-slots">
+    <h1>Internal slots of Intl.Segmenter Instances</h1>
+
+    <p>
+      Objects that have been successfully initialized as a Segmenter object also have several internal slots that are computed by the constructor:
+    </p>
+
+    <ul>
+      <li>[[Locale]] is a String value with the language tag of the locale whose localization is used by the segmenter.</li>
+      <li>[[SegmenterGranularity]] is one of the String values *"grapheme"*, *"word"*, *"sentence"*, or *"line"*, identifying the segmenter used.</li>
+      <li>[[SegmenterStrength]] is present on Segmenter instances with line granularity. If present, it may be *"strict"*, *"normal"*, or *"loose"*.</li>
+    </ul>
+
+  </emu-clause>
+
+  <emu-clause id="segment-iterator-objects">
+    <h1>Segment Iterators</h1>
+    The methods Intl.Segment.prototype.segment and Intl.Segment.prototype.reverseSegment return iterators over the segments for a particular string. This section describes those iterator objects.
+
+    <emu-clause id="sec-CreateSegmentIterator" aoid="CreateSegmentIterator">
+      <h1>CreateSegmentIterator ( segmenter, string, direction )</h1>
+      <p>When the abstract operation CreateSegmentIterator is called with Segmenter _segmenter_, string _string_ and a direction either ~forwards~ or ~backwards~ _direction_, the following steps are taken:</p>
+      <emu-alg>
+        1. Let _iterator_ be ObjectCreate(%SegmentIteratorPrototype%).
+        1. Let _iterator_.[[SegmentIteratorSegmenter]] be _segmenter_.
+        1. Let _iterator_.[[SegmentIteratorString]] be _string_.
+        1. Let _iterator_.[[SegmentIteratorDirection]] be _direction_.
+        1. If _direction_ is ~forwards~,
+          1. Let _iterator_.[[SegmentIteratorPosition]] be *0*.
+        1. Else,
+          1. Assert: _direction_ is ~backwards~.
+          1. Let _iterator_.[[SegmentIteratorPosition]] be Get(_string_, `"length"`).
+        1. Let _iterator_.[[SegmentIteratorBreakType]] be an implementation-dependent string representing a break at the edge of a string.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-AdvanceSegmentIterator" aoid="AdvanceSegmentIterator">
+      <h1>AdvanceSegmentIterator ( iterator )</h1>
+      <p>When the abstract operation AdvanceSegmentIterator is called with a segment iterator _iterator_, the following steps are taken:</p>
+      <emu-alg>
+        1. Let _segmenter_ be _iterator_.[[SegmentIteratorSegmenter]].
+        1. Let _string_ be _iterator_.[[SegmentIteratorString]].
+        1. Let _direction_ be _iterator_.[[SegmentIteratorDirection]].
+        1. Let _position_ be _iterator_.[[SegmentIteratorPosition]].
+        1. If _direction_ is ~forwards~ and _position_ is the length of _string_, or if _direction_ is ~backwards~ and _position_ is *0*, return true.
+        1. Based on the algorithm in UTS 14 or UTS 29, find the next or previous (based on _direction_) break in _string_ from the position _position_ based on the locale, granularity and strength in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]] and, if present, _segmenter_.[[SegmenterStrength]].
+        <!--TODO(littledan): Define the set of break types rigorously here, or refere to an external standard -->
+        1. Set _iterator_.[[SegmentIteratorBreakType]] to a string representing the type of break found.
+        1. Set _iterator_.[[SegmentIteratorPosition]] to the position of the newly found break point.
+        1. Return *false*.
+      </emu-alg>
+    </emu-clause>
+
+    <emu-clause id="sec-segment-iterator-prototype">
+      <h1>%SegmentIteratorPrototype%</h1>
+      %SegmentIteratorPrototype% is the prototype of all segment iterators. %SegmentIteratorPrototype% has the following properties:
+      <emu-clause id="sec-segment-iterator-prototype-next">
+        <h1>%SegmentIteratorPrototype%.next( )</h1>
+        <emu-alg>
+          1. Let _iterator_ be *this* value.
+          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. Let _previousPosition be _iterator_.[[SegmentIteratorPosition]].
+          1. Let _done_ be AdvanceSegmentIterator(_iterator_).
+          1. If _done_ is *true*, return CreateIterResult(*undefined*, *true*).
+          1. Let _newPosition_ be _iterator_.[[SegmentIteratorPosition]].
+          1. Let _string_ be _iterator_.[[SegmentIteratorString]].
+          1. If _iterator_.[[SegmentIteratorDirection]] is ~forwards~,
+            1. Let _segment_ be the substring of _string_ from _previousPosition_ to _newPosition_, inclusive of _previousPosition_ and exclusive of _newPosition_.
+          1. Else,
+            1. Let _segment_ be the substring of _string_ from _newPosition_ to _previousPosition_, inclusive of _newPosition_ and exclusive of _previousPosition_.
+          1. Let _breakType_ be _iterator_.[[SegmentIteratorBreakType]].
+          1. Let _result_ be ! ObjectCreate(%ObjectPrototype%).
+          1. Perform ! CreateDataProperty(_result_ `"segment"`, _segment_).
+          1. Perform ! CreateDataProperty(_result_, `"breakType"`, _breakType_).
+          1. Return CreateIterResult(_result_, *false*).
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-segment-iterator-prototype-advance">
+        <h1>%SegmentIteratorPrototype%.advance( )</h1>
+        <emu-alg>
+          1. Let _iterator_ be *this* value.
+          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. return AdvanceSegmentIterator(_iterator_).
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-segment-iterator-prototype-position">
+        <h1>get %SegmentIteratorPrototype%.position</h1>
+        <emu-alg>
+          1. Let _iterator_ be *this* value.
+          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. Return _iterator_.[[SegmentIteratorBreakType]].
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-segment-iterator-prototype-breakType">
+        <h1>get %SegmentIteratorPrototype%.breakType</h1>
+        <emu-alg>
+          1. Let _iterator_ be *this* value.
+          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. Return _iterator_.[[SegmentIteratorBreakType]].
+        </emu-alg>
+      </emu-clause>
+    </emu-clause>
+  </emu-clause>
+</emu-clause>
