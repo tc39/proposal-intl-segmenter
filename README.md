@@ -1,6 +1,6 @@
 # `Intl.Segmenter`: Unicode segmentation in JavaScript
 
-Stage 1 proposal, champion Daniel Ehrenberg (Google)
+Stage 2 proposal, champion Daniel Ehrenberg (Google)
 
 ## Motivation
 
