@@ -68,7 +68,11 @@ Return the index of the most recently discovered break position, as an offset fr
 
 #### `get %SegmentIterator%.prototype.breakType`
 
-The `breakType` of the most recently discovered segment.
+The `breakType` of the most recently discovered segment. If there is no current segment (e.g., a just-instantiated SegmentIterator, or one which has reached the end), or if the break type is "grapheme", then this will be `undefined`.
+
+For most programmers, the most important differences may be
+- Between `"none"` and everything else for word breaks (where `"none"` indicates that something is not a word)
+- Between `"soft"` and `"hard"` for line breaks (where `"soft"` indicates a line break opportunity, such as a space, and `"hard"` indicates a forced line break possibility, such as a `\n` character)
 
 ## FAQ
 

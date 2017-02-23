@@ -8,9 +8,30 @@ location: https://github.com/tc39/proposal-intl-segmenter
 copyright: false
 contributors: Daniel Ehrenberg
 </pre>
-<script src="ecmarkup.js" defer></script>
-<link rel="stylesheet" href="ecmarkup.css">
+<style>
+emu-issue {
+    margin: 1em 0;
+    padding: .5em;
+    padding-left: 1em;
+    display: block;
+}
 
+emu-issue:before {
+    display: block;
+    padding-bottom: .5em;
+    margin-left: -.5em;
+}
+
+emu-issue {
+    border-left: 5px solid #ff0000;
+    background: #ffdddd;
+}
+
+emu-issue:before {
+    color: #770000;
+    content: "ISSUE";
+}
+</style>
 <emu-clause id="segmenter-objects">
   <h1>Segmenter Objects</h1>
 
@@ -206,12 +227,74 @@ contributors: Daniel Ehrenberg
         1. Let _direction_ be _iterator_.[[SegmentIteratorDirection]].
         1. Let _position_ be _iterator_.[[SegmentIteratorPosition]].
         1. If _direction_ is ~forwards~ and _position_ is the length of _string_, or if _direction_ is ~backwards~ and _position_ is *0*, return true.
-        1. Based on the algorithm in UTS 14 or UTS 29, find the next or previous (based on _direction_) break in _string_ from the position _position_ based on the locale, granularity and strength in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]] and, if present, _segmenter_.[[SegmenterStrength]].
-        <!--TODO(littledan): Define the set of break types rigorously here, or refere to an external standard -->
-        1. Set _iterator_.[[SegmentIteratorBreakType]] to a string representing the type of break found.
+        1. Based on the algorithm in UTS 14 or UTS 29, find the next or previous (based on _direction_) break in _string_ from the position _position_ based on the locale, granularity and strictness in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]] and, if present, _segmenter_.[[SegmenterStrictness]].
+        1. Set _iterator_.[[SegmentIteratorBreakType]] to a string representing the type of break found, using one of the values found in the table <emu-xref href="#break-type-table"></emu-xref>, or `undefined` if the boundaries of the string are reached, or if there is no meaningful type for the granularity.
         1. Set _iterator_.[[SegmentIteratorPosition]] to the position of the newly found break point.
         1. Return *false*.
       </emu-alg>
+      <emu-table id="break-type-table" caption="[[SegmentIteratorBreakType]] values">
+        <table>
+          <tr>
+            <th>Granularity</th>
+            <th>breakType</th>
+            <th>Meaning</th>
+          </tr>
+          <tr>
+            <td>`"grapheme"`</td>
+            <td>`undefined`</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td rowspan=5>`"word"`</td>
+            <td>`"none"`</td>
+            <td>"words" that do not fit into any of other categories. Includes spaces and most punctuation.</td>
+          </tr>
+          <tr>
+            <td>`"number"`</td>
+            <td>words that appear to be numbers</td>
+          </tr>
+          <tr>
+            <td>`"letter"`</td>
+            <td>words that words containing letters</td>
+          </tr>
+          <tr>
+            <td>`"kana"`</td>
+            <td>words that words containing kana characters</td>
+          </tr>
+          <tr>
+            <td>`"ideo"`</td>
+            <td>words that words containing ideographic characters</td>
+          </tr>
+          <tr>
+            <td rowspan=2>`"line"`</td>
+            <td>`"soft"`</td>
+            <td>soft line breaks, positions at which a line break is acceptable but not required</td>
+          </tr>
+          <tr>
+            <td>`"hard"`</td>
+            <td>hard, or mandatory line breaks</td>
+          </tr>
+          <tr>
+            <td rowspan=2>`"sentence"`</td>
+            <td>`"term"`</td>
+            <td>
+              sentences ending with a sentence terminator
+              ('.', '?', '!', etc.) character, possibly followed by a
+              hard separator (CR, LF, PS, etc.)
+            </td>
+          </tr>
+          <tr>
+            <td>`"sep"`</td>
+            <td>
+              sentences that do not contain an ending
+              sentence terminator ('.', '?', '!', etc.) character, but
+              are ended only by a hard separator (CR, LF, PS, etc.)
+            </td>
+          </tr>
+        </table>
+      </emu-table>
+      <emu-note>Tag values and descriptions are based on those from ICU, from <a href="http://icu-project.org/apiref/icu4c/ubrk_8h.html">ubrk.h</a></emu-note>
+      <emu-issue>Should we go with a more minimal set? <a href="https://github.com/tc39/proposal-intl-segmenter/issues/15">Discussion here</a>.</emu-issue>
     </emu-clause>
 
     <emu-clause id="sec-segment-iterator-prototype">
