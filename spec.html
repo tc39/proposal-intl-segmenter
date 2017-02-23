@@ -151,22 +151,7 @@ emu-issue:before {
         1. Let _segment_ be *this* value.
         1. If Type(_segment_) is not Object or _segment_ does not have an [[SegmenterGranularity]] internal slot, throw a *TypeError* exception.
         1. Let _string_ be ? ToString(_string_).
-        1. Return ? CreateSegmentIterator(_segment_, _string_, ~forwards~).
-      </emu-alg>
-    </emu-clause>
-
-    <emu-clause id="sec-Intl.Segmenter.prototype.reverseSegment" aoid="Intl.Segmenter.prototype.reverseSegment">
-      <h1>Intl.Segmenter.prototype.reverseSegment( string )</h1>
-
-      <p>
-        When the *Intl.Segmenter.prototype.reverseSegment* is called with an argument _string_, the following steps are taken:
-      </p>
-
-      <emu-alg>
-        1. Let _segment_ be *this* value.
-        1. If Type(_segment_) is not Object or _segment_ does not have an [[SegmenterGranularity]] internal slot, throw a *TypeError* exception.
-        1. Let _string_ be ? ToString(_string_).
-        1. Return ? CreateSegmentIterator(_segment_, _string_, ~backwards~).
+        1. Return ? CreateSegmentIterator(_segment_, _string_).
       </emu-alg>
     </emu-clause>
 
@@ -202,29 +187,23 @@ emu-issue:before {
     The methods Intl.Segment.prototype.segment and Intl.Segment.prototype.reverseSegment return iterators over the segments for a particular string. This section describes those iterator objects.
 
     <emu-clause id="sec-CreateSegmentIterator" aoid="CreateSegmentIterator">
-      <h1>CreateSegmentIterator ( segmenter, string, direction )</h1>
-      <p>When the abstract operation CreateSegmentIterator is called with Segmenter _segmenter_, string _string_ and a direction either ~forwards~ or ~backwards~ _direction_, the following steps are taken:</p>
+      <h1>CreateSegmentIterator ( segmenter, string )</h1>
+      <p>When the abstract operation CreateSegmentIterator is called with Segmenter _segmenter_ and string _string_, the following steps are taken:</p>
       <emu-alg>
         1. Let _iterator_ be ObjectCreate(%SegmentIteratorPrototype%).
         1. Let _iterator_.[[SegmentIteratorSegmenter]] be _segmenter_.
         1. Let _iterator_.[[SegmentIteratorString]] be _string_.
-        1. Let _iterator_.[[SegmentIteratorDirection]] be _direction_.
-        1. If _direction_ is ~forwards~,
-          1. Let _iterator_.[[SegmentIteratorPosition]] be *0*.
-        1. Else,
-          1. Assert: _direction_ is ~backwards~.
-          1. Let _iterator_.[[SegmentIteratorPosition]] be Get(_string_, `"length"`).
+        1. Let _iterator_.[[SegmentIteratorPosition]] be *0*.
         1. Let _iterator_.[[SegmentIteratorBreakType]] be an implementation-dependent string representing a break at the edge of a string.
       </emu-alg>
     </emu-clause>
 
     <emu-clause id="sec-AdvanceSegmentIterator" aoid="AdvanceSegmentIterator">
-      <h1>AdvanceSegmentIterator ( iterator )</h1>
-      <p>When the abstract operation AdvanceSegmentIterator is called with a segment iterator _iterator_, the following steps are taken:</p>
+      <h1>AdvanceSegmentIterator ( iterator, direction )</h1>
+      <p>When the abstract operation AdvanceSegmentIterator is called with a segment iterator _iterator_ and a direction either ~forwards~ or ~backwards~ _direction_, the following steps are taken:</p>
       <emu-alg>
         1. Let _segmenter_ be _iterator_.[[SegmentIteratorSegmenter]].
         1. Let _string_ be _iterator_.[[SegmentIteratorString]].
-        1. Let _direction_ be _iterator_.[[SegmentIteratorDirection]].
         1. Let _position_ be _iterator_.[[SegmentIteratorPosition]].
         1. If _direction_ is ~forwards~ and _position_ is the length of _string_, or if _direction_ is ~backwards~ and _position_ is *0*, return true.
         1. Based on the algorithm in UTS 14 or UTS 29, find the next or previous (based on _direction_) break in _string_ from the position _position_ based on the locale, granularity and strictness in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]] and, if present, _segmenter_.[[SegmenterStrictness]].
@@ -306,14 +285,11 @@ emu-issue:before {
           1. Let _iterator_ be *this* value.
           1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
           1. Let _previousPosition be _iterator_.[[SegmentIteratorPosition]].
-          1. Let _done_ be AdvanceSegmentIterator(_iterator_).
+          1. Let _done_ be AdvanceSegmentIterator(_iterator_, ~forwards~).
           1. If _done_ is *true*, return CreateIterResult(*undefined*, *true*).
           1. Let _newPosition_ be _iterator_.[[SegmentIteratorPosition]].
           1. Let _string_ be _iterator_.[[SegmentIteratorString]].
-          1. If _iterator_.[[SegmentIteratorDirection]] is ~forwards~,
-            1. Let _segment_ be the substring of _string_ from _previousPosition_ to _newPosition_, inclusive of _previousPosition_ and exclusive of _newPosition_.
-          1. Else,
-            1. Let _segment_ be the substring of _string_ from _newPosition_ to _previousPosition_, inclusive of _newPosition_ and exclusive of _previousPosition_.
+          1. Let _segment_ be the substring of _string_ from _previousPosition_ to _newPosition_, inclusive of _previousPosition_ and exclusive of _newPosition_.
           1. Let _breakType_ be _iterator_.[[SegmentIteratorBreakType]].
           1. Let _result_ be ! ObjectCreate(%ObjectPrototype%).
           1. Perform ! CreateDataProperty(_result_ `"segment"`, _segment_).
@@ -322,12 +298,29 @@ emu-issue:before {
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-segment-iterator-prototype-advance">
-        <h1>%SegmentIteratorPrototype%.advance( )</h1>
+      <emu-clause id="sec-segment-iterator-prototype-following">
+        <h1>%SegmentIteratorPrototype%.following( [ _from_ ] )</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
           1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. return AdvanceSegmentIterator(_iterator_).
+          1. If _from_ is not *undefined*,
+            1. Let _from_ be ? ToIndex(_from_).
+            1. If _from_ &ge; _iterator_.[[SegmentIteratorString]], throw a *RangeError* exception.
+            1. Let _iterator_.[[SegmentIteratorPosition]] be _from_.
+          1. return AdvanceSegmentIterator(_iterator_, ~forwards~).
+        </emu-alg>
+      </emu-clause>
+
+      <emu-clause id="sec-segment-iterator-prototype-preceding">
+        <h1>%SegmentIteratorPrototype%.preceding( [ _from_ ] )</h1>
+        <emu-alg>
+          1. Let _iterator_ be *this* value.
+          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. If _from_ is not *undefined*,
+            1. Let _from_ be ? ToIndex(_from_).
+            1. If _from_ &gt; _iterator_.[[SegmentIteratorString]] or _from_ = 0, throw a *RangeError* exception.
+            1. Let _iterator_.[[SegmentIteratorPosition]] be _from_.
+          1. return AdvanceSegmentIterator(_iterator_, ~backwards~).
         </emu-alg>
       </emu-clause>
 

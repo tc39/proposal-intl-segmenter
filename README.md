@@ -43,11 +43,7 @@ Interpretation of options:
 
 ### `Intl.Segmenter.prototype.segment(string)`
 
-This method creates a new `%SegmentIterator%` over the input string, which will lazily find breaks.
-
-### `Intl.Segmenter.prototype.reverseSegment(string)`
-
-This method creates a new `%SegmentIterator%` over the input string starting at the end and moving towards the beginning.
+This method creates a new `%SegmentIterator%` over the input string, which will lazily find breaks, starting at position 0.
 
 ### `%SegmentIterator%`
 
@@ -58,13 +54,17 @@ This class iterates over segment boundaries of a particular string.
 
 The `next` method, to use finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `segment` and `breakType`. The `segment` contains the substring between the previous break location and the newly found break location; the `breakType` describes which sort of segment it is (TODO: define possible values, not part of UTS). This method defines the iteration protocol support for SegmentIterators, and is present for convenience; other methods expose a richer API.
 
-#### `%SegmentIterator%.prototype.advance()`
+#### `%SegmentIterator%.prototype.following(index)`
 
-Move the iterator to the next break position, returning `undefined`. If the SegmentIterator was created by `reverseSegment`, it finds the previous break position.
+Move the iterator to the next break position after the given code unit index _index_, or if no index is provided, after its current position. Returns *true* if the end of the string was reached.
+
+#### `%SegmentIterator%.prototype.preceding(index)`
+
+Move the iterator to the prevoius break position before the given code unit index _index_, or if no index is provided, before its current position. Returns *true* if the beginning of the string was reached.
 
 #### `get %SegmentIterator%.prototype.position`
 
-Return the index of the most recently discovered break position, as an offset from the beginning of the string. Initially the `position` is 0 for the result of a call to `segment`, and it is the length of the string after a call to `reverseSegment()`.
+Return the index of the most recently discovered break position, as an offset from the beginning of the string. Initially the `position` is 0.
 
 #### `get %SegmentIterator%.prototype.breakType`
 
