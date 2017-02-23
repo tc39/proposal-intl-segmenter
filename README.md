@@ -39,7 +39,7 @@ for (let {segment, breakType} of iterator) {
 
 Interpretation of options:
 - `granularity`, which may be `grapheme`, `word`, `sentence` or `line`.
-- `strength`, valid only for `line` granularity, which may be `'strict'`, `'normal'`, or `'loose'`, following CSS Text Module Level 3.
+- `strictness`, valid only for `line` granularity, which may be `'strict'`, `'normal'`, or `'loose'`, following <a href="https://drafts.csswg.org/css-text-3/#line-break-property">CSS Text Module Level 3</a>.
 
 ### `Intl.Segmenter.prototype.segment(string)`
 

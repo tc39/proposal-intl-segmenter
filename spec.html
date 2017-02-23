@@ -43,8 +43,8 @@ contributors: Daniel Ehrenberg
         1. Let _granularity_ be ? GetOption(_options_, *"granularity"*, *"string"*, « *"grapheme"*, *"word"*, *"sentence"*,  *"line"* », *"grapheme"*).
         1. Set _segmenter_.[[SegmenterGranularity]] to _granularity_.
         1. If _granularity_ is *"line"*,
-          1. Let _strength_ be ? GetOption(_options_, *"strength"*, *"string"*,  « *"strict"*, *"normal"*, *"loose"* », *"normal"*).
-          1. Set _segmenter_.[[SegmenterStrength]] to _strength_.
+          1. Let _strictness_ be ? GetOption(_options_, *"strictness"*, *"string"*,  « *"strict"*, *"normal"*, *"loose"* », *"normal"*).
+          1. Set _segmenter_.[[SegmenterStrictness]] to _strictness_.
         1. Return _segmenter_.
       </emu-alg>
     </emu-clause>
@@ -99,7 +99,6 @@ contributors: Daniel Ehrenberg
 
       <emu-note>
         CLDR defines several extension keys, but this specification does not expose them.
-        <!-- TODO(littledan): Is there one for strength that should be exposed? -->
       </emu-note>
 
     </emu-clause>
@@ -157,7 +156,7 @@ contributors: Daniel Ehrenberg
         This function provides access to the locale and options computed during initialization of the object.
       </p>
       <p>
-        The function returns a new object whose properties and attributes are set as if constructed by an object literal assigning to each of the following properties the value of the corresponding internal slot of this Segmenter object. (see <emu-xref href="#sec-segmenter-internal-slots"></emu-xref>): locale, granularity and strength. Properties whose corresponding internal slots are not present are not assigned.
+        The function returns a new object whose properties and attributes are set as if constructed by an object literal assigning to each of the following properties the value of the corresponding internal slot of this Segmenter object. (see <emu-xref href="#sec-segmenter-internal-slots"></emu-xref>): locale, granularity and strictness. Properties whose corresponding internal slots are not present are not assigned.
       </p>
     </emu-clause>
   </emu-clause>
@@ -172,7 +171,7 @@ contributors: Daniel Ehrenberg
     <ul>
       <li>[[Locale]] is a String value with the language tag of the locale whose localization is used by the segmenter.</li>
       <li>[[SegmenterGranularity]] is one of the String values *"grapheme"*, *"word"*, *"sentence"*, or *"line"*, identifying the segmenter used.</li>
-      <li>[[SegmenterStrength]] is present on Segmenter instances with line granularity. If present, it may be *"strict"*, *"normal"*, or *"loose"*.</li>
+      <li>[[SegmenterStrictness]] is present on Segmenter instances with line granularity. If present, it may be *"strict"*, *"normal"*, or *"loose"*.</li>
     </ul>
 
   </emu-clause>
