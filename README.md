@@ -87,3 +87,17 @@ A: Hyphenation is expected to have a different sort of API shape for various rea
 - There may be hyphenation breaks of different priorities
 - Hyphenation plays into line layout and font rendering in a more complex way, and we might want to expose it at that level (e.g., in the Web Platform rather than ECMAScript)
 - Hyphenation is just a less well-developed thing in the internationalization world. CLDR and ICU don't support it yet; certain web browsers are only getting support for it now in CSS. It's often not done perfectly. It could use some more time to bake. By contrast, word, grapheme, sentence and line breaks have been in the Unicode specification for a long time; this is a shovel-ready project.
+
+Q: Why is this API stateful?
+
+It would be possible to make a stateless API without a SegmentIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next break before or after. This method would return an object `{breakType, position}` similar to what `next()` returns in this API. However, there are a few downsides to this approach:
+- Performance:
+  - Often, JavaScript implementations need to take an extra step to convert an input string into a form that's usable for the external internationalization library. When querying several break positions on a single string, it is nice to reuse the new form of the string; it would be difficult to cache this and invalidate the cache when appropriate.
+  - The `{breakType, position}` object may be a difficult allocation to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
+- Convenience: Many (most?) usages of this API want to iterate through a string, either forwards or backwards, and get all of the appropriate breaks, possibly interspersed with doing related work. A stateful API may be more terse for this sort of use case--no need to keep track of the previous break position and feed it back in.
+
+It is easy to create a stateless API based on this stateful one, or vice versa, in user JavaScript code.
+
+Q: Why is this an Intl API instead of String methods?
+
+A: All of these break types are actually locale-dependent, and some allow complex options. The result of the `segment` method is a SegmentIterator. Generally, for non-trivial cases like this, analogous APIs are put in ECMA-402's Intl object. The only internationalization-related functions that are placed as methods on `String`, `Date` and `Number` are simpler functions that just convert to a string, e.g., `toLocaleString()`, `toLocaleUpperCase()`--these may take a locale argument, but no options bag.
