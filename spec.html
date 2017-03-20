@@ -49,7 +49,7 @@ emu-issue:before {
       </p>
 
       <emu-alg>
-        1. If NewTarget is *undefined*, let _newTarget_ be the active function object, else let _newTarget_ be NewTarget.
+        1. If NewTarget is *undefined*, throw a *TypeError* exception.
         1. Let _segmenter_ be ? OrdinaryCreateFromConstructor(_newTarget_, *%SegmenterPrototype%*).
         1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
         1. Let _opt_ be a new Record.

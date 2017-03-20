@@ -16,7 +16,7 @@ Chrome has been shipping its own nonstandard segmentation API called `Intl.v8Bre
 
 ```js
 // Create a segmenter in your locale
-let segmenter = Intl.Segmenter("fr", {granularity: "word"});
+let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
 
 // Get an iterator over a string
 let iterator = segmenter.segment("Ceci n'est pas une pipe");
@@ -35,7 +35,7 @@ for (let {segment, breakType} of iterator) {
 
 [polyfill](https://gist.github.com/inexorabletash/8c4d869a584bcaa18514729332300356) for a historical snapshot of this proposal
 
-### `Intl.Segmenter(locale, options)`
+### `new Intl.Segmenter(locale, options)`
 
 Interpretation of options:
 - `granularity`, which may be `grapheme`, `word`, `sentence` or `line`.
