@@ -206,7 +206,7 @@ emu-issue:before {
         1. Let _string_ be _iterator_.[[SegmentIteratorString]].
         1. Let _position_ be _iterator_.[[SegmentIteratorPosition]].
         1. If _direction_ is ~forwards~ and _position_ is the length of _string_, or if _direction_ is ~backwards~ and _position_ is *0*, return true.
-        1. Based on the algorithm in UTS 14 or UTS 29, find the next or previous (based on _direction_) break in _string_ from the position _position_ based on the locale, granularity and strictness in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]] and, if present, _segmenter_.[[SegmenterStrictness]].
+        1. Find the next or previous (based on _direction_) break in _string_ from the position _position_ based on the locale, granularity and strictness in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]] and, if present, _segmenter_.[[SegmenterStrictness]].
         1. Set _iterator_.[[SegmentIteratorBreakType]] to a string representing the type of break found, using one of the values found in the table <emu-xref href="#break-type-table"></emu-xref>, or `undefined` if the boundaries of the string are reached, or if there is no meaningful type for the granularity.
         1. Set _iterator_.[[SegmentIteratorPosition]] to the position of the newly found break point.
         1. Return *false*.
@@ -274,6 +274,7 @@ emu-issue:before {
       </emu-table>
       <emu-note>Tag values and descriptions are based on those from ICU, from <a href="http://icu-project.org/apiref/icu4c/ubrk_8h.html">ubrk.h</a></emu-note>
       <emu-issue>Should we go with a more minimal set? <a href="https://github.com/tc39/proposal-intl-segmenter/issues/15">Discussion here</a>.</emu-issue>
+      <emu-note>This specification does not require a specific algorithm, but a high-quality line breaking algorithm can be found in UTS 14, while an algorithm for other breaks is specified in UTS 29. Intl.Segmenter implementations which are inside of web browsers are encouraged to use the same line breaking algorithm as is used for text layout.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-segment-iterator-prototype">
