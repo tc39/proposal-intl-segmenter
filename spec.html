@@ -224,25 +224,13 @@ emu-issue:before {
             <td></td>
           </tr>
           <tr>
-            <td rowspan=5>`"word"`</td>
+            <td rowspan=2>`"word"`</td>
             <td>`"none"`</td>
             <td>"words" that do not fit into any of other categories. Includes spaces and most punctuation.</td>
           </tr>
           <tr>
-            <td>`"number"`</td>
-            <td>words that appear to be numbers</td>
-          </tr>
-          <tr>
-            <td>`"letter"`</td>
-            <td>words that words containing letters</td>
-          </tr>
-          <tr>
-            <td>`"kana"`</td>
-            <td>words that words containing kana characters</td>
-          </tr>
-          <tr>
-            <td>`"ideo"`</td>
-            <td>words that words containing ideographic characters</td>
+            <td>`"word"`</td>
+            <td>words that appear to be numbers, letters, kana characters, ideographic characters, etc</td>
           </tr>
           <tr>
             <td rowspan=2>`"line"`</td>
@@ -272,8 +260,6 @@ emu-issue:before {
           </tr>
         </table>
       </emu-table>
-      <emu-note>Tag values and descriptions are based on those from ICU, from <a href="http://icu-project.org/apiref/icu4c/ubrk_8h.html">ubrk.h</a></emu-note>
-      <emu-issue>Should we go with a more minimal set? <a href="https://github.com/tc39/proposal-intl-segmenter/issues/15">Discussion here</a>.</emu-issue>
       <emu-note>This specification does not require a specific algorithm, but a high-quality line breaking algorithm can be found in UTS 14, while an algorithm for other breaks is specified in UTS 29. Intl.Segmenter implementations which are inside of web browsers are encouraged to use the same line breaking algorithm as is used for text layout.</emu-note>
     </emu-clause>
 
