@@ -53,19 +53,20 @@ emu-issue:before {
         1. Let _segmenter_ be ? OrdinaryCreateFromConstructor(_newTarget_, *%SegmenterPrototype%*).
         1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
         1. Let _opt_ be a new Record.
-        1. Let _matcher_ be ? GetOption(_options_, *"localeMatcher"*, *"string"*, &laquo; *"lookup"*, *"best fit"* &raquo;, *"best fit"*).
+        1. Let _matcher_ be ? GetOption(_options_, `"localeMatcher"`, `"string"`, &laquo; `"lookup"`, `"best fit"` &raquo;, `"best fit"`).
         1. Set _opt_.[[localeMatcher]] to _matcher_.
+        1. Let _strictness_ be ? GetOption(_options_, `"strictness"`, `"string"`,  « `"strict"`, `"normal"`, `"loose"` », `"normal"`).
+        1. Set _opt_.[[lb]] to _strictness_.
         1. Let _r_ be ResolveLocale(%Segmenter%.[[AvailableLocales]], _requestedLocales_, _opt_, %Segmenter%.[[RelevantExtensionKeys]]).
         1. Set _segmenter_.[[Locale]] to the value of _r_.[[Locale]].
         1. If _options_ is *undefined*, then
-          1. Let _options_ be ObjectCreate(*%ObjectPrototype%*).
+          1. Let _options_ be ObjectCreate(*null*).
         1. Else
           1. Let _options_ be ? ToObject(_options_).
-        1. Let _granularity_ be ? GetOption(_options_, *"granularity"*, *"string"*, « *"grapheme"*, *"word"*, *"sentence"*,  *"line"* », *"grapheme"*).
+        1. Let _granularity_ be ? GetOption(_options_, `"granularity"`, `"string"`, « `"grapheme"`, `"word"`, `"sentence"`,  `"line"` », `"grapheme"`).
         1. Set _segmenter_.[[SegmenterGranularity]] to _granularity_.
-        1. If _granularity_ is *"line"*,
-          1. Let _strictness_ be ? GetOption(_options_, *"strictness"*, *"string"*,  « *"strict"*, *"normal"*, *"loose"* », *"normal"*).
-          1. Set _segmenter_.[[SegmenterStrictness]] to _strictness_.
+        1. If _granularity_ is `"line"`,
+          1. Set _segmenter_.[[SegmenterStrictness]] to _r_.[[lb]].
         1. Return _segmenter_.
       </emu-alg>
     </emu-clause>
@@ -115,7 +116,7 @@ emu-issue:before {
       </p>
 
       <p>
-        The value of the [[RelevantExtensionKeys]] internal slot is *[]*.
+        The value of the [[RelevantExtensionKeys]] internal slot is &laquo; `"lb"` &raquo;.
       </p>
 
       <emu-note>
@@ -176,8 +177,8 @@ emu-issue:before {
 
     <ul>
       <li>[[Locale]] is a String value with the language tag of the locale whose localization is used by the segmenter.</li>
-      <li>[[SegmenterGranularity]] is one of the String values *"grapheme"*, *"word"*, *"sentence"*, or *"line"*, identifying the segmenter used.</li>
-      <li>[[SegmenterStrictness]] is present on Segmenter instances with line granularity. If present, it may be *"strict"*, *"normal"*, or *"loose"*.</li>
+      <li>[[SegmenterGranularity]] is one of the String values `"grapheme"`, `"word"`, `"sentence"`, or `"line"`, identifying the segmenter used.</li>
+      <li>[[SegmenterStrictness]] is present on Segmenter instances with line granularity. If present, it may be `"strict"`, `"normal"`, or `"loose"`.</li>
     </ul>
 
   </emu-clause>
