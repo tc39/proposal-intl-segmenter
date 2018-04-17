@@ -82,7 +82,7 @@ A: The situation is a little more complicated, e.g., for Indic scripts. Work is 
 
 Q: Shouldn't we be putting new APIs in built-in modules?
 
-A: If built-in modules come out before this gets to Stage 3, that sounds like a good option. However, so far the idea in TC39 has been not to block either thing on the other. Built-in modules still have some big questions to resolve, e.g., how/whether polyfills should interact with them.
+A: If built-in modules had come out before this gets to Stage 3, that sounds like a good option. However, so far the idea in TC39 has been not to block either thing on the other. Built-in modules still have some big questions to resolve, e.g., how/whether polyfills should interact with them.
 
 Q: Why is hyphenation not included?
 
@@ -104,4 +104,4 @@ It is easy to create a stateless API based on this stateful one, or vice versa, 
 
 Q: Why is this an Intl API instead of String methods?
 
-A: All of these break types are actually locale-dependent, and some allow complex options. The result of the `segment` method is a SegmentIterator. Generally, for non-trivial cases like this, analogous APIs are put in ECMA-402's Intl object. The only internationalization-related functions that are placed as methods on `String`, `Date` and `Number` are simpler functions that just convert to a string, e.g., `toLocaleString()`, `toLocaleUpperCase()`--these may take a locale argument, but no options bag.
+A: All of these break types are actually locale-dependent, and some allow complex options. The result of the `segment` method is a SegmentIterator. For many non-trivial cases like this, analogous APIs are put in ECMA-402's Intl object. This allows for the work that happens on each instantiation to be shared, improving performance. We could make a convenience method on String as a follow-on proposal.
