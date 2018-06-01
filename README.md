@@ -1,6 +1,6 @@
 # `Intl.Segmenter`: Unicode segmentation in JavaScript
 
-Stage 2 proposal, champion Daniel Ehrenberg (Igalia)
+Stage 3 proposal, champion Daniel Ehrenberg (Igalia)
 
 ## Motivation
 
