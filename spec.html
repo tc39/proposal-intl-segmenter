@@ -50,7 +50,7 @@ emu-issue:before {
 
       <emu-alg>
         1. If NewTarget is *undefined*, throw a *TypeError* exception.
-        1. Let _segmenter_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%SegmenterPrototype%"`).
+        1. Let _segmenter_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%SegmenterPrototype%"`, « [[InitializedSegmenter]] »).
         1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
         1. Let _opt_ be a new Record.
         1. Let _matcher_ be ? GetOption(_options_, `"localeMatcher"`, `"string"`, &laquo; `"lookup"`, `"best fit"` &raquo;, `"best fit"`).
@@ -161,7 +161,7 @@ emu-issue:before {
 
       <emu-alg>
         1. Let _segment_ be *this* value.
-        1. If Type(_segment_) is not Object or _segment_ does not have an [[SegmenterGranularity]] internal slot, throw a *TypeError* exception.
+        1. If Type(_segment_) is not Object or _segment_ does not have an [[InitializedSegmenter]] internal slot, throw a *TypeError* exception.
         1. Let _string_ be ? ToString(_string_).
         1. Return ? CreateSegmentIterator(_segment_, _string_).
       </emu-alg>
@@ -176,8 +176,7 @@ emu-issue:before {
 
       <emu-alg>
         1. Let _pr_ be the *this* value.
-        1. If Type(_pr_) is not Object, throw a *TypeError* exception.
-        1. If _pr_ does not have an [[SegmenterGranularity]] internal slot, throw a *TypeError* exception.
+        1. If Type(_pr_) is not Object or _pr_ does not have an [[InitializedSegmenter]] internal slot, throw a *TypeError* exception.
         1. Let _options_ be ! ObjectCreate(%ObjectPrototype%).
         1. For each row of <emu-xref href="#table-segmenter-resolvedoptions-properties"></emu-xref>, except the header row, do
           1. Let _p_ be the Property value of the current row.
