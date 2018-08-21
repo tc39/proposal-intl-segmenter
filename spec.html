@@ -43,7 +43,7 @@ emu-issue:before {
       The Segmenter constructor is a standard built-in property of the Intl object.</p>
 
     <emu-clause id="sec-Intl.Segmenter">
-      <h1>Intl.Segmenter ([ locales [ , options ]])</h1>
+      <h1>Intl.Segmenter ([ _locales_ [ , _options_ ]])</h1>
 
       <p>
         When the *Intl.Segmenter* function is called with optional arguments the following steps are taken:
@@ -92,7 +92,7 @@ emu-issue:before {
     </emu-clause>
 
     <emu-clause id="sec-Intl.Segmenter.supportedLocalesOf">
-      <h1>Intl.Segmenter.supportedLocalesOf (locales [, options ])</h1>
+      <h1>Intl.Segmenter.supportedLocalesOf ( _locales_ [, _options_ ])</h1>
 
       <p>
         When the *supportedLocalesOf* method of *%Segmenter%* is called, the following steps are taken:
@@ -154,7 +154,7 @@ emu-issue:before {
     </emu-clause>
 
     <emu-clause id="sec-Intl.Segmenter.prototype.segment" aoid="Intl.Segmenter.prototype.segment">
-      <h1>Intl.Segmenter.prototype.segment( string )</h1>
+      <h1>Intl.Segmenter.prototype.segment( _string_ )</h1>
 
       <p>
         When the *Intl.Segmenter.prototype.segment* is called with an argument _string_, the following steps are taken:
@@ -233,7 +233,7 @@ emu-issue:before {
     The methods Intl.Segment.prototype.segment and Intl.Segment.prototype.reverseSegment return iterators over the segments for a particular string. This section describes those iterator objects.
 
     <emu-clause id="sec-CreateSegmentIterator" aoid="CreateSegmentIterator">
-      <h1>CreateSegmentIterator ( segmenter, string )</h1>
+      <h1>CreateSegmentIterator ( _segmenter_, _string_ )</h1>
       <p>When the abstract operation CreateSegmentIterator is called with Segmenter _segmenter_ and string _string_, the following steps are taken:</p>
       <emu-alg>
         1. Let _iterator_ be ObjectCreate(%SegmentIteratorPrototype%).
@@ -245,7 +245,7 @@ emu-issue:before {
     </emu-clause>
 
     <emu-clause id="sec-AdvanceSegmentIterator" aoid="AdvanceSegmentIterator">
-      <h1>AdvanceSegmentIterator ( iterator, direction )</h1>
+      <h1>AdvanceSegmentIterator ( _iterator_, _direction_ )</h1>
       <p>When the abstract operation AdvanceSegmentIterator is called with a segment iterator _iterator_ and a direction either ~forwards~ or ~backwards~ _direction_, the following steps are taken:</p>
       <emu-alg>
         1. Let _segmenter_ be _iterator_.[[SegmentIteratorSegmenter]].
