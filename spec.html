@@ -317,7 +317,7 @@ emu-issue:before {
         <emu-alg>
           1. Let _iterator_ be *this* value.
           1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. Let _previousPosition be _iterator_.[[SegmentIteratorPosition]].
+          1. Let _previousPosition_ be _iterator_.[[SegmentIteratorPosition]].
           1. Let _done_ be AdvanceSegmentIterator(_iterator_, ~forwards~).
           1. If _done_ is *true*, return CreateIterResult(*undefined*, *true*).
           1. Let _newPosition_ be _iterator_.[[SegmentIteratorPosition]].
