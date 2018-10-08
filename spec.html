@@ -311,7 +311,13 @@ emu-issue:before {
 
     <emu-clause id="sec-segment-iterator-prototype">
       <h1>%SegmentIteratorPrototype%</h1>
-      %SegmentIteratorPrototype% is the prototype of all segment iterators. %SegmentIteratorPrototype% has the following properties:
+      The %SegmentIteratorPrototype% object:
+      <ul>
+        <li>is the prototype of all segment iterators.</li>
+        <li>is an ordinary object.</li>
+        <li>has a [[Prototype]] internal slot whose value is the intrinsic object %IteratorPrototype%.</li>
+        <li>has the following properties:
+      </ul>
       <emu-clause id="sec-segment-iterator-prototype-next">
         <h1>%SegmentIteratorPrototype%.next( )</h1>
         <emu-alg>
