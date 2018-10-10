@@ -51,7 +51,7 @@ emu-issue:before {
 
       <emu-alg>
         1. If NewTarget is *undefined*, throw a *TypeError* exception.
-        1. Let _segmenter_ be ? OrdinaryCreateFromConstructor(_newTarget_, `"%SegmenterPrototype%"`, « [[InitializedSegmenter]] »).
+        1. Let _segmenter_ be ? OrdinaryCreateFromConstructor(NewTarget, `"%SegmenterPrototype%"`, « [[InitializedSegmenter]] »).
         1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
         1. If _options_ is *undefined*, then
           1. Let _options_ be ObjectCreate(*null*).
@@ -251,7 +251,7 @@ emu-issue:before {
         1. Let _segmenter_ be _iterator_.[[SegmentIteratorSegmenter]].
         1. Let _string_ be _iterator_.[[SegmentIteratorString]].
         1. Let _position_ be _iterator_.[[SegmentIteratorPosition]].
-        1. If _direction_ is ~forwards~ and _position_ is the length of _string_, or if _direction_ is ~backwards~ and _position_ is *0*, return true.
+        1. If _direction_ is ~forwards~ and _position_ is the length of _string_, or if _direction_ is ~backwards~ and _position_ is *0*, return *true*.
         1. Find the next or previous (based on _direction_) break in _string_ from the position _position_ based on the locale, granularity and lineBreakStyle in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]] and, if present, _segmenter_.[[SegmenterLineBreakStyle]].
         1. Set _iterator_.[[SegmentIteratorBreakType]] to a string representing the type of break found, using one of the values found in the table <emu-xref href="#break-type-table"></emu-xref>, or `undefined` if the boundaries of the string are reached, or if there is no meaningful type for the granularity.
         1. Set _iterator_.[[SegmentIteratorPosition]] to the position of the newly found break point.
