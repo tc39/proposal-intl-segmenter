@@ -240,7 +240,7 @@ emu-issue:before {
         1. Let _iterator_.[[SegmentIteratorSegmenter]] be _segmenter_.
         1. Let _iterator_.[[SegmentIteratorString]] be _string_.
         1. Let _iterator_.[[SegmentIteratorPosition]] be *0*.
-        1. Let _iterator_.[[SegmentIteratorBreakType]] be an implementation-dependent string representing a break at the edge of a string.
+        1. Let _iterator_.[[SegmentIteratorBreakType]] be *undefined*.
       </emu-alg>
     </emu-clause>
 
@@ -253,7 +253,7 @@ emu-issue:before {
         1. Let _position_ be _iterator_.[[SegmentIteratorPosition]].
         1. If _direction_ is ~forwards~ and _position_ is the length of _string_, or if _direction_ is ~backwards~ and _position_ is *0*, return *true*.
         1. Find the next or previous (based on _direction_) break in _string_ from the position _position_ based on the locale, granularity and lineBreakStyle in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]] and, if present, _segmenter_.[[SegmenterLineBreakStyle]].
-        1. Set _iterator_.[[SegmentIteratorBreakType]] to a string representing the type of break found, using one of the values found in the table <emu-xref href="#break-type-table"></emu-xref>, or `undefined` if the boundaries of the string are reached, or if there is no meaningful type for the granularity.
+        1. Set _iterator_.[[SegmentIteratorBreakType]] to a value representing the type of break found, using one of the values found in the table <emu-xref href="#break-type-table"></emu-xref>, or `undefined` if the boundaries of the string are reached, or if there is no meaningful type for the granularity.
         1. Set _iterator_.[[SegmentIteratorPosition]] to the position of the newly found break point.
         1. Return *false*.
       </emu-alg>
