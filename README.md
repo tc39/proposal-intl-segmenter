@@ -60,7 +60,7 @@ Move the iterator to the next break position after the given code unit index _in
 
 #### `%SegmentIterator%.prototype.preceding(index)`
 
-Move the iterator to the prevoius break position before the given code unit index _index_, or if no index is provided, before its current position. Returns *true* if the beginning of the string was reached.
+Move the iterator to the previous break position before the given code unit index _index_, or if no index is provided, before its current position. Returns *true* if the beginning of the string was reached.
 
 #### `get %SegmentIterator%.prototype.position`
 
