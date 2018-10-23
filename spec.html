@@ -333,6 +333,7 @@ emu-issue:before {
           1. Let _result_ be ! ObjectCreate(%ObjectPrototype%).
           1. Perform ! CreateDataProperty(_result_ `"segment"`, _segment_).
           1. Perform ! CreateDataProperty(_result_, `"breakType"`, _breakType_).
+          1. Perform ! CreateDataProperty(_result_, `"position"`, _newPosition_).
           1. Return CreateIterResultObject(_result_, *false*).
         </emu-alg>
       </emu-clause>
