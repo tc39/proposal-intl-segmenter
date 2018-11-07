@@ -43,7 +43,7 @@ Interpretation of options:
 
 ### `Intl.Segmenter.prototype.segment(string)`
 
-This method creates a new `%SegmentIterator%` over the input string, which will lazily find breaks, starting at position 0.
+This method creates a new `%SegmentIterator%` over the input string, which will lazily find breaks, starting at index 0.
 
 ### `%SegmentIterator%`
 
@@ -56,15 +56,15 @@ The `next` method, to use finds the next boundary and returns an `IterationResul
 
 #### `%SegmentIterator%.prototype.following(index)`
 
-Move the iterator to the next break position after the given code unit index _index_, or if no index is provided, after its current position. Returns *true* if the end of the string was reached.
+Move the iterator to the next break position after the given code unit index _index_, or if no index is provided, after its current index. Returns *true* if the end of the string was reached.
 
 #### `%SegmentIterator%.prototype.preceding(index)`
 
-Move the iterator to the previous break position before the given code unit index _index_, or if no index is provided, before its current position. Returns *true* if the beginning of the string was reached.
+Move the iterator to the previous break position before the given code unit index _index_, or if no index is provided, before its current index. Returns *true* if the beginning of the string was reached.
 
-#### `get %SegmentIterator%.prototype.position`
+#### `get %SegmentIterator%.prototype.index`
 
-Return the index of the most recently discovered break position, as an offset from the beginning of the string. Initially the `position` is 0.
+Return the code unit index of the most recently discovered break position, as an offset from the beginning of the string. Initially the `index` is 0.
 
 #### `get %SegmentIterator%.prototype.breakType`
 
@@ -94,10 +94,10 @@ A: Hyphenation is expected to have a different sort of API shape for various rea
 
 Q: Why is this API stateful?
 
-It would be possible to make a stateless API without a SegmentIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next break before or after. This method would return an object `{breakType, position}` similar to what `next()` returns in this API. However, there are a few downsides to this approach:
+It would be possible to make a stateless API without a SegmentIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next break before or after. This method would return an object `{breakType, index}` similar to what `next()` returns in this API. However, there are a few downsides to this approach:
 - Performance:
   - Often, JavaScript implementations need to take an extra step to convert an input string into a form that's usable for the external internationalization library. When querying several break positions on a single string, it is nice to reuse the new form of the string; it would be difficult to cache this and invalidate the cache when appropriate.
-  - The `{breakType, position}` object may be a difficult allocation to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
+  - The `{breakType, index}` object may be a difficult allocation to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
 - Convenience: Many (most?) usages of this API want to iterate through a string, either forwards or backwards, and get all of the appropriate breaks, possibly interspersed with doing related work. A stateful API may be more terse for this sort of use case--no need to keep track of the previous break position and feed it back in.
 
 It is easy to create a stateless API based on this stateful one, or vice versa, in user JavaScript code.
