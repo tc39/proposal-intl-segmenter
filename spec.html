@@ -366,24 +366,6 @@ emu-issue:before {
           1. return AdvanceSegmentIterator(_iterator_, ~backwards~).
         </emu-alg>
       </emu-clause>
-
-      <emu-clause id="sec-segment-iterator-prototype-index">
-        <h1>get %SegmentIteratorPrototype%.index</h1>
-        <emu-alg>
-          1. Let _iterator_ be *this* value.
-          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. Return _iterator_.[[SegmentIteratorIndex]].
-        </emu-alg>
-      </emu-clause>
-
-      <emu-clause id="sec-segment-iterator-prototype-breakType">
-        <h1>get %SegmentIteratorPrototype%.breakType</h1>
-        <emu-alg>
-          1. Let _iterator_ be *this* value.
-          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. Return _iterator_.[[SegmentIteratorBreakType]].
-        </emu-alg>
-      </emu-clause>
     </emu-clause>
   </emu-clause>
 </emu-clause>

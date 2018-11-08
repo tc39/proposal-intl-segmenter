@@ -71,14 +71,6 @@ Move the iterator to the next break position after the given code unit index _in
 
 Move the iterator to the previous break position before the given code unit index _index_, or if no index is provided, before its current index. Returns *true* if the beginning of the string was reached.
 
-#### `get %SegmentIterator%.prototype.index`
-
-Return the code unit index of the most recently discovered break position, as an offset from the beginning of the string. Initially the `index` is 0.
-
-#### `get %SegmentIterator%.prototype.breakType`
-
-The `breakType` of the most recently discovered segment. If there is no current segment (e.g., a just-instantiated SegmentIterator, or one which has reached the end), or if the break type is "grapheme", then this will be `undefined`.
-
 ## FAQ
 
 Q: Why should we pass a locale and options bag for grapheme breaks? Isn't there just one way to do it?
