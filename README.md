@@ -52,7 +52,7 @@ This class iterates over segment boundaries of a particular string.
 
 #### `%SegmentIterator%.prototype.next()`
 
-The `next` method, to use finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `segment` and `breakType`. The `segment` contains the substring between the previous break location and the newly found break location; the `breakType` describes which sort of segment it is (TODO: define possible values, not part of UTS). This method defines the iteration protocol support for SegmentIterators, and is present for convenience; other methods expose a richer API.
+The `next` method implements the _Iterator_ interface, finding the next boundary and returning an `IteratorResult` object relating to it. The object includes an `index` field containing the code point index immediately following the boundary, a `segment` field containing the substring between the previous boundary and the newly-found one, and a `breakType` field describing the boundary and its preceding segment (e.g., letter/number/ideograph "word" vs. space/punctuation/etc. "none" non-word" or soft" line break opportunity such as follows spaces vs. "hard" mandatory line break such as follows line feeds).
 
 #### `%SegmentIterator%.prototype.following(index)`
 
@@ -69,10 +69,6 @@ Return the code unit index of the most recently discovered break position, as an
 #### `get %SegmentIterator%.prototype.breakType`
 
 The `breakType` of the most recently discovered segment. If there is no current segment (e.g., a just-instantiated SegmentIterator, or one which has reached the end), or if the break type is "grapheme", then this will be `undefined`.
-
-For most programmers, the most important differences may be
-- Between `"none"` and everything else for word breaks (where `"none"` indicates that something is not a word)
-- Between `"soft"` and `"hard"` for line breaks (where `"soft"` indicates a line break opportunity, such as a space, and `"hard"` indicates a forced line break possibility, such as a `\n` character)
 
 ## FAQ
 
