@@ -110,13 +110,20 @@ This method creates a new `%SegmentIterator%` over the input string, which will 
 
 ### `%SegmentIterator%`
 
-This class iterates over segmentation boundaries of a particular string.
+This class iterates over segment boundaries of a particular string.
+
+#### Iteration result data
+
+* `index` is the code point index immediately following the last found boundary.
+* `precedingSegmentType` is a value characterizing the segment preceding last found boundary. Some particularly important values are:
+  * For `word` granularity, "word" for letter/number/ideograph segments vs. "none" for spaces/punctuation/etc.
+  * For `sentence` granularity, "term" for segments with terminating punctuation vs. "sep" for those without it.
 
 ### Methods on %SegmentIterator%:
 
 #### `%SegmentIterator%.prototype.next()`
 
-The `next` method implements the _Iterator_ interface, finding the next boundary and returning an `IteratorResult` object relating to it. The object includes an `index` field containing the code point index immediately following the boundary and a `precedingSegmentType` field describing the segment preceding it (e.g., letter/number/ideograph "word" vs. space/punctuation/etc. "none" non-word).
+The `next` method implements the _Iterator_ interface, finding the next boundary and returning an `IteratorResult` object relating to it. The object includes `index` and `precedingSegmentType` fields corresponding to iteration result data.
 
 #### `%SegmentIterator%.prototype.following(index)`
 
