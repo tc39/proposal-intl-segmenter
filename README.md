@@ -48,11 +48,20 @@ This method creates a new `%SegmentIterator%` over the input string, which will 
 ### `%SegmentIterator%`
 
 This class iterates over segment boundaries of a particular string.
+
+#### Iteration result data
+
+* `index` is the code point index immediately following the last found boundary.
+* `segment` is the substring between the last found boundary and its preceding boundary.
+* `breakType` is a value characterizing `segment` and its terminating boundary. Some particularly important values are:
+  * For `word` granularity, "word" for letter/number/ideograph segments vs. "none" for spaces/punctuation/etc.
+  * For `line` granularity, "hard" for mandatory line breaks such as follow U+000A LINE FEED (`\n`) vs. "soft" for line break opportunities such as follow U+0020 SPACE.
+
 ### Methods on %SegmentIterator%:
 
 #### `%SegmentIterator%.prototype.next()`
 
-The `next` method implements the _Iterator_ interface, finding the next boundary and returning an `IteratorResult` object relating to it. The object includes an `index` field containing the code point index immediately following the boundary, a `segment` field containing the substring between the previous boundary and the newly-found one, and a `breakType` field describing the boundary and its preceding segment (e.g., letter/number/ideograph "word" vs. space/punctuation/etc. "none" non-word" or soft" line break opportunity such as follows spaces vs. "hard" mandatory line break such as follows line feeds).
+The `next` method implements the _Iterator_ interface, finding the next boundary and returning an `IteratorResult` object relating to it. The object includes `index`, `segment`, and `breakType` fields corresponding to iteration result data.
 
 #### `%SegmentIterator%.prototype.following(index)`
 
