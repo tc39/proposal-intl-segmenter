@@ -60,14 +60,10 @@ emu-issue:before {
         1. Let _opt_ be a new Record.
         1. Let _matcher_ be ? GetOption(_options_, `"localeMatcher"`, `"string"`, &laquo; `"lookup"`, `"best fit"` &raquo;, `"best fit"`).
         1. Set _opt_.[[localeMatcher]] to _matcher_.
-        1. Let _lineBreakStyle_ be ? GetOption(_options_, `"lineBreakStyle"`, `"string"`,  « `"strict"`, `"normal"`, `"loose"` », `"normal"`).
-        1. Set _opt_.[[lb]] to _lineBreakStyle_.
         1. Let _r_ be ResolveLocale(%Segmenter%.[[AvailableLocales]], _requestedLocales_, _opt_, %Segmenter%.[[RelevantExtensionKeys]]).
         1. Set _segmenter_.[[Locale]] to the value of _r_.[[Locale]].
-        1. Let _granularity_ be ? GetOption(_options_, `"granularity"`, `"string"`, « `"grapheme"`, `"word"`, `"sentence"`,  `"line"` », `"grapheme"`).
+        1. Let _granularity_ be ? GetOption(_options_, `"granularity"`, `"string"`, « `"grapheme"`, `"word"`, `"sentence"` », `"grapheme"`).
         1. Set _segmenter_.[[SegmenterGranularity]] to _granularity_.
-        1. If _granularity_ is `"line"`,
-          1. Set _segmenter_.[[SegmenterLineBreakStyle]] to _r_.[[lb]].
         1. Return _segmenter_.
       </emu-alg>
     </emu-clause>
@@ -201,10 +197,6 @@ emu-issue:before {
             <td>[[SegmenterGranularity]]</td>
             <td>`"granularity"`</td>
           </tr>
-          <tr>
-            <td>[[SegmenterLineBreakStyle]]</td>
-            <td>`"lineBreakStyle"`</td>
-          </tr>
         </table>
       </emu-table>
     </emu-clause>
@@ -219,8 +211,7 @@ emu-issue:before {
 
     <ul>
       <li>[[Locale]] is a String value with the language tag of the locale whose localization is used by the segmenter.</li>
-      <li>[[SegmenterGranularity]] is one of the String values `"grapheme"`, `"word"`, `"sentence"`, or `"line"`, identifying the segmenter used.</li>
-      <li>[[SegmenterLineBreakStyle]] is present on Segmenter instances with line granularity. If present, it may be `"strict"`, `"normal"`, or `"loose"`.</li>
+      <li>[[SegmenterGranularity]] is one of the String values `"grapheme"`, `"word"`, or `"sentence"`, identifying the segmenter used.</li>
     </ul>
 
   </emu-clause>

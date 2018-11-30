@@ -6,9 +6,9 @@ Stage 3 proposal, champion Daniel Ehrenberg (Igalia)
 
 A code point is not a "letter" or a displayed unit on the screen. That designation goes to the grapheme, which can consist of multiple code points (e.g., including accent marks, conjoining Korean characters). Unicode defines a grapheme segmentation algorithm to find the boundaries between graphemes. This may be useful in implementing advanced editors/input methods, or other forms of text processing.
 
-Unicode also defines an algorithm for finding breaks between words and sentences, which CLDR tailors per locale. These boundaries may be useful, for example, in implementing a text editor which has commands for jumping or highlighting words and sentences. There is an analogous algorithm for opportunities for line breaking.
+Unicode also defines an algorithm for finding breaks between words and sentences, which CLDR tailors per locale. These boundaries may be useful, for example, in implementing a text editor which has commands for jumping or highlighting words and sentences.
 
-Grapheme, word and sentence segmentation is defined in [UAX 29](http://unicode.org/reports/tr29/). Line breaking is defined in [UAX 14](http://www.unicode.org/reports/tr14/). Web browsers need an implementation of both kinds of segmentation to function, and shipping it to JavaScript saves memory and network bandwidth as compared to expecting developers to implement it themselves in JavaScript.
+Grapheme, word and sentence segmentation is defined in [UAX 29](http://unicode.org/reports/tr29/). Web browsers need an implementation of this kind of segmentation to function, and shipping it to JavaScript saves memory and network bandwidth as compared to expecting developers to implement it themselves in JavaScript.
 
 Chrome has been shipping its own nonstandard segmentation API called `Intl.v8BreakIterator` for a few years. However, [for a few reasons](https://github.com/tc39/ecma402/issues/60#issuecomment-194041835), this API does not seem suitable for standardization. This explainer outlines a new API which attempts to be more in accordance with modern, post-ES2015 JavaScript API design.
 
@@ -38,8 +38,8 @@ for (let {segment, breakType} of iterator) {
 ### `new Intl.Segmenter(locale, options)`
 
 Interpretation of options:
-- `granularity`, which may be `grapheme`, `word`, `sentence` or `line`.
-- `strictness`, valid only for `line` granularity, which may be `'strict'`, `'normal'`, or `'loose'`, following <a href="https://drafts.csswg.org/css-text-3/#line-break-property">CSS Text Module Level 3</a>.
+
+- `granularity`, which may be `grapheme`, `word`, or `sentence`.
 
 ### `Intl.Segmenter.prototype.segment(string)`
 
@@ -48,6 +48,7 @@ This method creates a new `%SegmentIterator%` over the input string, which will 
 ### `%SegmentIterator%`
 
 This class iterates over segment boundaries of a particular string.
+
 ### Methods on %SegmentIterator%:
 
 #### `%SegmentIterator%.prototype.next()`
@@ -72,7 +73,6 @@ The `breakType` of the most recently discovered segment. If there is no current 
 
 For most programmers, the most important differences may be
 - Between `"none"` and everything else for word breaks (where `"none"` indicates that something is not a word)
-- Between `"soft"` and `"hard"` for line breaks (where `"soft"` indicates a line break opportunity, such as a space, and `"hard"` indicates a forced line break possibility, such as a `\n` character)
 
 ## FAQ
 
