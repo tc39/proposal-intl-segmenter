@@ -246,16 +246,16 @@ emu-issue:before {
       <emu-alg>
         1. Let _segmenter_ be _iterator_.[[SegmentIteratorSegmenter]].
         1. Let _string_ be _iterator_.[[SegmentIteratorString]].
-        1. Let _index_ be _iterator_.[[SegmentIteratorIndex]].
+        1. Let _lastIndex_ be _iterator_.[[SegmentIteratorIndex]].
         1. Let _len_ be the length of _string_.
         1. If _direction_ is ~forwards~, then
-          1. If _index_ is _len_, return *true*.
-          1. Find the first boundary in _string_ following the boundary immediately preceding code unit index _index_ based on the locale, and granularity in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]].
+          1. If _lastIndex_ is _len_, return *true*.
+          1. Find the first boundary in _string_ following the boundary immediately preceding code unit index _lastIndex_ based on the locale, and granularity in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]].
           1. Assert: A boundary was found.
         1. Else
           1. Assert: _direction_ is ~backwards~.
-          1. If _index_ is *0*, return *true*.
-          1. Find the last boundary in _string_ preceding the boundary immediately preceding code unit index _index_ based on the locale, and granularity in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]].
+          1. If _lastIndex_ is *0*, return *true*.
+          1. Find the last boundary in _string_ preceding the boundary immediately preceding code unit index _lastIndex_ based on the locale, and granularity in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]].
           1. If no boundary was found, proceed as if a boundary was found at the beginning of _string_.
         1. Set _iterator_.[[SegmentIteratorPrecedingSegmentType]] to a value representing the type of the segment which precedes the boundary, using one of the values found in the table <emu-xref href="#preceding-segment-type-table"></emu-xref>, or `undefined` if the boundaries of the string are reached, or if there is no meaningful type for the granularity.
         1. Set _iterator_.[[SegmentIteratorIndex]] to the index of the code unit which immediately follows the newly found boundary.
