@@ -110,7 +110,7 @@ emu-issue:before {
       </p>
 
       <p>
-        The value of the [[RelevantExtensionKeys]] internal slot is &laquo; `"lb"` &raquo;.
+        The value of the [[RelevantExtensionKeys]] internal slot is &laquo;  &raquo;.
       </p>
 
       <emu-note>
@@ -244,7 +244,7 @@ emu-issue:before {
         1. Let _index_ be _iterator_.[[SegmentIteratorIndex]].
         1. Let _len_ be the length of _string_.
         1. If _direction_ is ~forwards~ and _index_ is _len_, or if _direction_ is ~backwards~ and _index_ is *0*, return *true*.
-        1. Find the next or previous (based on _direction_) break in _string_ from the code unit index _index_ based on the locale, granularity and lineBreakStyle in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]] and, if present, _segmenter_.[[SegmenterLineBreakStyle]].
+        1. Find the next or previous (based on _direction_) break in _string_ from the code unit index _index_ based on the locale, and granularity in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]].
         1. Set _iterator_.[[SegmentIteratorBreakType]] to a value representing the type of break found, using one of the values found in the table <emu-xref href="#break-type-table"></emu-xref>, or `undefined` if the boundaries of the string are reached, or if there is no meaningful type for the granularity.
         1. Set _iterator_.[[SegmentIteratorIndex]] to the code unit index of the newly found break position.
         1. Return *false*.
@@ -271,15 +271,6 @@ emu-issue:before {
             <td>words that appear to be numbers, letters, kana characters, ideographic characters, etc</td>
           </tr>
           <tr>
-            <td rowspan=2>`"line"`</td>
-            <td>`"soft"`</td>
-            <td>soft line breaks, positions at which a line break is acceptable but not required</td>
-          </tr>
-          <tr>
-            <td>`"hard"`</td>
-            <td>hard, or mandatory line breaks</td>
-          </tr>
-          <tr>
             <td rowspan=2>`"sentence"`</td>
             <td>`"term"`</td>
             <td>
@@ -298,7 +289,7 @@ emu-issue:before {
           </tr>
         </table>
       </emu-table>
-      <emu-note>This specification does not require a specific algorithm, but a high-quality line breaking algorithm can be found in UTS 14, while an algorithm for other breaks is specified in UTS 29. Intl.Segmenter implementations which are inside of web browsers are encouraged to use the same line breaking algorithm as is used for text layout.</emu-note>
+      <emu-note>This specification does not require a specific algorithm, but an algorithm for all breaks is specified in UTS 29.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-segment-iterator-prototype">
