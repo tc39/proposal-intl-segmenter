@@ -60,7 +60,8 @@ emu-issue:before {
         1. Let _opt_ be a new Record.
         1. Let _matcher_ be ? GetOption(_options_, `"localeMatcher"`, `"string"`, &laquo; `"lookup"`, `"best fit"` &raquo;, `"best fit"`).
         1. Set _opt_.[[localeMatcher]] to _matcher_.
-        1. Let _r_ be ResolveLocale(%Segmenter%.[[AvailableLocales]], _requestedLocales_, _opt_, %Segmenter%.[[RelevantExtensionKeys]]).
+        1. Let _localeData_ be %Segmenter%.[[LocaleData]].
+        1. Let _r_ be ResolveLocale(%Segmenter%.[[AvailableLocales]], _requestedLocales_, _opt_, %Segmenter%.[[RelevantExtensionKeys]], _localeData_).
         1. Set _segmenter_.[[Locale]] to the value of _r_.[[Locale]].
         1. Let _granularity_ be ? GetOption(_options_, `"granularity"`, `"string"`, « `"grapheme"`, `"word"`, `"sentence"` », `"grapheme"`).
         1. Set _segmenter_.[[SegmenterGranularity]] to _granularity_.
@@ -108,7 +109,11 @@ emu-issue:before {
       <p>
         The value of the [[AvailableLocales]] internal slot is implementation defined within the constraints described in <emu-xref href="#sec-segmenter-internal-slots"></emu-xref>.
       </p>
-
+        
+      <p>
+        The value of the [[LocaleData]] internal slot is implementation defined within the constraints described in <emu-xref href="#sec-internal-slots"></emu-xref>.
+      </p>
+        
       <p>
         The value of the [[RelevantExtensionKeys]] internal slot is &laquo;  &raquo;.
       </p>
