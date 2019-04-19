@@ -1,6 +1,6 @@
 # `Intl.Segmenter`: Unicode segmentation in JavaScript
 
-Stage 3 proposal, champion Daniel Ehrenberg (Igalia)
+Stage 2 proposal, champion Daniel Ehrenberg (Igalia)
 
 ## Motivation
 
@@ -47,7 +47,7 @@ This method creates a new `%SegmentIterator%` over the input string, which will 
 
 ### `%SegmentIterator%`
 
-This class iterates over segment boundaries of a particular string.
+This class iterates over segmentation boundaries of a particular string.
 
 ### Methods on %SegmentIterator%:
 
@@ -71,9 +71,6 @@ Return the code unit index of the most recently discovered break position, as an
 
 The `breakType` of the most recently discovered segment. If there is no current segment (e.g., a just-instantiated SegmentIterator, or one which has reached the end), or if the break type is "grapheme", then this will be `undefined`.
 
-For most programmers, the most important differences may be
-- Between `"none"` and everything else for word breaks (where `"none"` indicates that something is not a word)
-
 ## FAQ
 
 Q: Why should we pass a locale and options bag for grapheme breaks? Isn't there just one way to do it?
@@ -83,6 +80,10 @@ A: The situation is a little more complicated, e.g., for Indic scripts. Work is 
 Q: Shouldn't we be putting new APIs in built-in modules?
 
 A: If built-in modules had come out before this gets to Stage 3, that sounds like a good option. However, so far the idea in TC39 has been not to block either thing on the other. Built-in modules still have some big questions to resolve, e.g., how/whether polyfills should interact with them.
+
+Q: Why is line breaking not included?
+
+Line breaking was provided in an earlier version of this API, but it is excluded because simply a line breaking API would be incomplete: Line breaking is typically used when laying out text, and text layout requires a larger set of APIs, e.g., determining the width of a rendered string of text. For this reason, we suggest continued development of a line breaking API as part of the [CSS Houdini](https://github.com/w3c/css-houdini-drafts/wiki) effort.
 
 Q: Why is hyphenation not included?
 
