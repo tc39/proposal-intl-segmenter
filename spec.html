@@ -46,7 +46,7 @@ emu-issue:before {
       <h1>Intl.Segmenter ([ _locales_ [ , _options_ ]])</h1>
 
       <p>
-        When the *Intl.Segmenter* function is called with optional arguments the following steps are taken:
+        When the `Intl.Segmenter` function is called with optional arguments the following steps are taken:
       </p>
 
       <emu-alg>
@@ -136,7 +136,7 @@ emu-issue:before {
       <h1>Intl.Segmenter.prototype.constructor</h1>
 
       <p>
-        The initial value of *Intl.Segmenter.prototype.constructor* is *%Segmenter%*.
+        The initial value of `Intl.Segmenter.prototype.constructor` is *%Segmenter%*.
       </p>
     </emu-clause>
 
@@ -151,18 +151,18 @@ emu-issue:before {
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-Intl.Segmenter.prototype.segment" aoid="Intl.Segmenter.prototype.segment">
-      <h1>Intl.Segmenter.prototype.segment( _string_ )</h1>
+    <emu-clause id="sec-Intl.Segmenter.prototype.break" aoid="Intl.Segmenter.prototype.break">
+      <h1>Intl.Segmenter.prototype.break( _string_ )</h1>
 
       <p>
-        When the *Intl.Segmenter.prototype.segment* is called with an argument _string_, the following steps are taken:
+        When the `Intl.Segmenter.prototype.break` is called with an argument _string_, the following steps are taken:
       </p>
 
       <emu-alg>
-        1. Let _segment_ be *this* value.
-        1. If Type(_segment_) is not Object or _segment_ does not have an [[InitializedSegmenter]] internal slot, throw a *TypeError* exception.
+        1. Let _segmenter_ be *this* value.
+        1. If Type(_segmenter_) is not Object or _segmenter_ does not have an [[InitializedSegmenter]] internal slot, throw a *TypeError* exception.
         1. Let _string_ be ? ToString(_string_).
-        1. Return ? CreateSegmentIterator(_segment_, _string_).
+        1. Return ? CreateBreakIterator(_segmenter_, _string_).
       </emu-alg>
     </emu-clause>
 
@@ -221,40 +221,40 @@ emu-issue:before {
 
   </emu-clause>
 
-  <emu-clause id="segment-iterator-objects">
-    <h1>Segment Iterators</h1>
+  <emu-clause id="break-iterator-objects">
+    <h1>Break Iterators</h1>
 
     <p>
-      The Intl.Segment.prototype.segment method returns iterators over the segments for a particular string. This section describes those iterator objects.
+      The `Intl.Segment.prototype.break` method returns iterators over the boundaries for a particular string. This section describes those iterator objects.
     </p>
 
-    <emu-clause id="sec-CreateSegmentIterator" aoid="CreateSegmentIterator">
-      <h1>CreateSegmentIterator ( _segmenter_, _string_ )</h1>
-      <p>When the abstract operation CreateSegmentIterator is called with Segmenter _segmenter_ and string _string_, the following steps are taken:</p>
+    <emu-clause id="sec-CreateBreakIterator" aoid="CreateBreakIterator">
+      <h1>CreateBreakIterator ( _segmenter_, _string_ )</h1>
+      <p>When the abstract operation CreateBreakIterator is called with Segmenter _segmenter_ and string _string_, the following steps are taken:</p>
       <emu-alg>
-        1. Let _iterator_ be ObjectCreate(%SegmentIteratorPrototype%).
-        1. Let _iterator_.[[SegmentIteratorSegmenter]] be _segmenter_.
-        1. Let _iterator_.[[SegmentIteratorString]] be _string_.
-        1. Let _iterator_.[[SegmentIteratorIndex]] be *0*.
-        1. Let _iterator_.[[SegmentIteratorBreakType]] be *undefined*.
+        1. Let _iterator_ be ObjectCreate(%BreakIteratorPrototype%).
+        1. Let _iterator_.[[BreakIteratorSegmenter]] be _segmenter_.
+        1. Let _iterator_.[[BreakIteratorString]] be _string_.
+        1. Let _iterator_.[[BreakIteratorIndex]] be *0*.
+        1. Let _iterator_.[[BreakIteratorBreakType]] be *undefined*.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-AdvanceSegmentIterator" aoid="AdvanceSegmentIterator">
-      <h1>AdvanceSegmentIterator ( _iterator_, _direction_ )</h1>
-      <p>When the abstract operation AdvanceSegmentIterator is called with a segment iterator _iterator_ and a direction either ~forwards~ or ~backwards~ _direction_, the following steps are taken:</p>
+    <emu-clause id="sec-AdvanceBreakIterator" aoid="AdvanceBreakIterator">
+      <h1>AdvanceBreakIterator ( _iterator_, _direction_ )</h1>
+      <p>When the abstract operation AdvanceBreakIterator is called with a break iterator _iterator_ and a direction either ~forwards~ or ~backwards~ _direction_, the following steps are taken:</p>
       <emu-alg>
-        1. Let _segmenter_ be _iterator_.[[SegmentIteratorSegmenter]].
-        1. Let _string_ be _iterator_.[[SegmentIteratorString]].
-        1. Let _index_ be _iterator_.[[SegmentIteratorIndex]].
+        1. Let _segmenter_ be _iterator_.[[BreakIteratorSegmenter]].
+        1. Let _string_ be _iterator_.[[BreakIteratorString]].
+        1. Let _index_ be _iterator_.[[BreakIteratorIndex]].
         1. Let _len_ be the length of _string_.
         1. If _direction_ is ~forwards~ and _index_ is _len_, or if _direction_ is ~backwards~ and _index_ is *0*, return *true*.
         1. Find the next or previous (based on _direction_) break in _string_ from the code unit index _index_ based on the locale, and granularity in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]].
-        1. Set _iterator_.[[SegmentIteratorBreakType]] to a value representing the type of break found, using one of the values found in the table <emu-xref href="#break-type-table"></emu-xref>, or `undefined` if the boundaries of the string are reached, or if there is no meaningful type for the granularity.
-        1. Set _iterator_.[[SegmentIteratorIndex]] to the code unit index of the newly found break position.
+        1. Set _iterator_.[[BreakIteratorBreakType]] to a value representing the type of break found, using one of the values found in the table <emu-xref href="#break-type-table"></emu-xref>, or `undefined` if the boundaries of the string are reached, or if there is no meaningful type for the granularity.
+        1. Set _iterator_.[[BreakIteratorIndex]] to the code unit index of the newly found break position.
         1. Return *false*.
       </emu-alg>
-      <emu-table id="break-type-table" caption="[[SegmentIteratorBreakType]] values">
+      <emu-table id="break-type-table" caption="[[BreakIteratorBreakType]] values">
         <table>
           <tr>
             <th>Granularity</th>
@@ -297,78 +297,76 @@ emu-issue:before {
       <emu-note>This specification does not require a specific algorithm, but an algorithm for all breaks is specified in UTS 29.</emu-note>
     </emu-clause>
 
-    <emu-clause id="sec-segment-iterator-prototype">
-      <h1>%SegmentIteratorPrototype%</h1>
-      The %SegmentIteratorPrototype% object:
+    <emu-clause id="sec-break-iterator-prototype">
+      <h1>%BreakIteratorPrototype%</h1>
+      The %BreakIteratorPrototype% object:
       <ul>
-        <li>is the prototype of all segment iterators.</li>
+        <li>is the prototype of all break iterators.</li>
         <li>is an ordinary object.</li>
         <li>has a [[Prototype]] internal slot whose value is the intrinsic object %IteratorPrototype%.</li>
         <li>has the following properties:
       </ul>
-      <emu-clause id="sec-segment-iterator-prototype-next">
-        <h1>%SegmentIteratorPrototype%.next( )</h1>
+      <emu-clause id="sec-break-iterator-prototype-next">
+        <h1>%BreakIteratorPrototype%.next( )</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
-          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. Let _previousIndex_ be _iterator_.[[SegmentIteratorIndex]].
-          1. Let _done_ be AdvanceSegmentIterator(_iterator_, ~forwards~).
+          1. If _iterator_ does not have a [[BreakIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. Let _previousIndex_ be _iterator_.[[BreakIteratorIndex]].
+          1. Let _done_ be AdvanceBreakIterator(_iterator_, ~forwards~).
           1. If _done_ is *true*, return CreateIterResultObject(*undefined*, *true*).
-          1. Let _newIndex_ be _iterator_.[[SegmentIteratorIndex]].
-          1. Let _string_ be _iterator_.[[SegmentIteratorString]].
-          1. Let _segment_ be the substring of _string_ from _previousIndex_ to _newIndex_, inclusive of _previousIndex_ and exclusive of _newIndex_.
-          1. Let _breakType_ be _iterator_.[[SegmentIteratorBreakType]].
+          1. Let _newIndex_ be _iterator_.[[BreakIteratorIndex]].
+          1. Let _string_ be _iterator_.[[BreakIteratorString]].
+          1. Let _breakType_ be _iterator_.[[BreakIteratorBreakType]].
           1. Let _result_ be ! ObjectCreate(%ObjectPrototype%).
-          1. Perform ! CreateDataProperty(_result_ `"segment"`, _segment_).
           1. Perform ! CreateDataProperty(_result_, `"breakType"`, _breakType_).
           1. Perform ! CreateDataProperty(_result_, `"index"`, _newIndex_).
           1. Return CreateIterResultObject(_result_, *false*).
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-segment-iterator-prototype-following">
-        <h1>%SegmentIteratorPrototype%.following( [ _from_ ] )</h1>
+      <emu-clause id="sec-break-iterator-prototype-following">
+        <h1>%BreakIteratorPrototype%.following( [ _from_ ] )</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
-          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. If _iterator_ does not have a [[BreakIteratorSegmenter]] internal slot, throw a *TypeError* exception.
           1. If _from_ is not *undefined*,
             1. Let _from_ be ? ToIndex(_from_).
-            1. Let _length_ be the length of _iterator_.[[SegmentIteratorString]].
+            1. Let _length_ be the length of _iterator_.[[BreakIteratorString]].
             1. If _from_ &ge; _length_, throw a *RangeError* exception.
-            1. Let _iterator_.[[SegmentIteratorIndex]] be _from_.
-          1. return AdvanceSegmentIterator(_iterator_, ~forwards~).
+            1. Let _iterator_.[[BreakIteratorIndex]] be _from_.
+          1. return AdvanceBreakIterator(_iterator_, ~forwards~).
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-segment-iterator-prototype-preceding">
-        <h1>%SegmentIteratorPrototype%.preceding( [ _from_ ] )</h1>
+      <emu-clause id="sec-break-iterator-prototype-preceding">
+        <h1>%BreakIteratorPrototype%.preceding( [ _from_ ] )</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
-          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. If _iterator_ does not have a [[BreakIteratorSegmenter]] internal slot, throw a *TypeError* exception.
           1. If _from_ is not *undefined*,
             1. Let _from_ be ? ToIndex(_from_).
-            1. Let _length_ be the length of _iterator_.[[SegmentIteratorString]].
+            1. Let _length_ be the length of _iterator_.[[BreakIteratorString]].
             1. If _from_ &gt; _length_ or _from_ = 0, throw a *RangeError* exception.
-            1. Let _iterator_.[[SegmentIteratorIndex]] be _from_.
-          1. return AdvanceSegmentIterator(_iterator_, ~backwards~).
+            1. Let _iterator_.[[BreakIteratorIndex]] be _from_.
+          1. return AdvanceBreakIterator(_iterator_, ~backwards~).
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-segment-iterator-prototype-index">
-        <h1>get %SegmentIteratorPrototype%.index</h1>
+      <emu-clause id="sec-break-iterator-prototype-index">
+        <h1>get %BreakIteratorPrototype%.index</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
-          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. Return _iterator_.[[SegmentIteratorIndex]].
+          1. If _iterator_ does not have a [[BreakIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. Return _iterator_.[[BreakIteratorIndex]].
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-segment-iterator-prototype-breakType">
-        <h1>get %SegmentIteratorPrototype%.breakType</h1>
+      <emu-clause id="sec-break-iterator-prototype-breakType">
+        <h1>get %BreakIteratorPrototype%.breakType</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
-          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. Return _iterator_.[[SegmentIteratorBreakType]].
+          1. If _iterator_ does not have a [[BreakIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. Return _iterator_.[[BreakIteratorBreakType]].
         </emu-alg>
       </emu-clause>
     </emu-clause>

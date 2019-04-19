@@ -1,6 +1,6 @@
 # `Intl.Segmenter`: Unicode segmentation in JavaScript
 
-Stage 3 proposal, champion Daniel Ehrenberg (Igalia)
+Stage 2 proposal, champion Daniel Ehrenberg (Igalia)
 
 ## Motivation
 
@@ -19,16 +19,16 @@ Chrome has been shipping its own nonstandard segmentation API called `Intl.v8Bre
 let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
 
 // Get an iterator over a string
-let iterator = segmenter.segment("Ceci n'est pas une pipe");
+let iterator = segmenter.break("Ceci n'est pas une pipe");
 
 // Iterate over it!
-for (let {segment, breakType} of iterator) {
-  console.log(`segment: ${segment} breakType: ${breakType}`);
+for (let {index, breakType} of iterator) {
+  console.log(`location: ${index} breakType: ${breakType}`);
   break;
 }
 
 // logs the following to the console:
-// segment: Ceci breakType: letter
+// location: 4 breakType: letter
 ```
 
 ## API
@@ -41,38 +41,35 @@ Interpretation of options:
 
 - `granularity`, which may be `grapheme`, `word`, or `sentence`.
 
-### `Intl.Segmenter.prototype.segment(string)`
+### `Intl.Segmenter.prototype.break(string)`
 
-This method creates a new `%SegmentIterator%` over the input string, which will lazily find breaks, starting at index 0.
+This method creates a new `%BreakIterator%` over the input string, which will lazily find breaks, starting at index 0.
 
-### `%SegmentIterator%`
+### `%BreakIterator%`
 
-This class iterates over segment boundaries of a particular string.
+This class iterates over segmentation boundaries of a particular string.
 
-### Methods on %SegmentIterator%:
+### Methods on %BreakIterator%:
 
-#### `%SegmentIterator%.prototype.next()`
+#### `%BreakIterator%.prototype.next()`
 
-The `next` method, to use finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `segment` and `breakType`. The `segment` contains the substring between the previous break location and the newly found break location; the `breakType` describes which sort of segment it is (TODO: define possible values, not part of UTS). This method defines the iteration protocol support for SegmentIterators, and is present for convenience; other methods expose a richer API.
+The `next` method, to use finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `index` and `breakType`. The `index` contains the location and the newly found break location; the `breakType` describes which sort of break was found. This method defines the iteration protocol support for BreakIterators, and is present for convenience; other methods expose a richer API.
 
-#### `%SegmentIterator%.prototype.following(index)`
+#### `%BreakIterator%.prototype.following(index)`
 
 Move the iterator to the next break position after the given code unit index _index_, or if no index is provided, after its current index. Returns *true* if the end of the string was reached.
 
-#### `%SegmentIterator%.prototype.preceding(index)`
+#### `%BreakIterator%.prototype.preceding(index)`
 
 Move the iterator to the previous break position before the given code unit index _index_, or if no index is provided, before its current index. Returns *true* if the beginning of the string was reached.
 
-#### `get %SegmentIterator%.prototype.index`
+#### `get %BreakIterator%.prototype.index`
 
 Return the code unit index of the most recently discovered break position, as an offset from the beginning of the string. Initially the `index` is 0.
 
-#### `get %SegmentIterator%.prototype.breakType`
+#### `get %BreakIterator%.prototype.breakType`
 
-The `breakType` of the most recently discovered segment. If there is no current segment (e.g., a just-instantiated SegmentIterator, or one which has reached the end), or if the break type is "grapheme", then this will be `undefined`.
-
-For most programmers, the most important differences may be
-- Between `"none"` and everything else for word breaks (where `"none"` indicates that something is not a word)
+The `breakType` of the most recently discovered break location. If there is no current break (e.g., a just-instantiated BreakIterator, or one which has reached the end), or if the break type is "grapheme", then this will be `undefined`.
 
 ## FAQ
 
@@ -84,6 +81,10 @@ Q: Shouldn't we be putting new APIs in built-in modules?
 
 A: If built-in modules had come out before this gets to Stage 3, that sounds like a good option. However, so far the idea in TC39 has been not to block either thing on the other. Built-in modules still have some big questions to resolve, e.g., how/whether polyfills should interact with them.
 
+Q: Why is line breaking not included?
+
+Line breaking was provided in an earlier version of this API, but it is excluded because simply a line breaking API would be incomplete: Line breaking is typically used when laying out text, and text layout requires a larger set of APIs, e.g., determining the width of a rendered string of text. For this reason, we suggest continued development of a line breaking API as part of the [CSS Houdini](https://github.com/w3c/css-houdini-drafts/wiki) effort.
+
 Q: Why is hyphenation not included?
 
 A: Hyphenation is expected to have a different sort of API shape for various reasons:
@@ -94,7 +95,7 @@ A: Hyphenation is expected to have a different sort of API shape for various rea
 
 Q: Why is this API stateful?
 
-It would be possible to make a stateless API without a SegmentIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next break before or after. This method would return an object `{breakType, index}` similar to what `next()` returns in this API. However, there are a few downsides to this approach:
+It would be possible to make a stateless API without a BreakIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next break before or after. This method would return an object `{breakType, index}` similar to what `next()` returns in this API. However, there are a few downsides to this approach:
 - Performance:
   - Often, JavaScript implementations need to take an extra step to convert an input string into a form that's usable for the external internationalization library. When querying several break positions on a single string, it is nice to reuse the new form of the string; it would be difficult to cache this and invalidate the cache when appropriate.
   - The `{breakType, index}` object may be a difficult allocation to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
@@ -104,4 +105,8 @@ It is easy to create a stateless API based on this stateful one, or vice versa, 
 
 Q: Why is this an Intl API instead of String methods?
 
-A: All of these break types are actually locale-dependent, and some allow complex options. The result of the `segment` method is a SegmentIterator. For many non-trivial cases like this, analogous APIs are put in ECMA-402's Intl object. This allows for the work that happens on each instantiation to be shared, improving performance. We could make a convenience method on String as a follow-on proposal.
+A: All of these break types are actually locale-dependent, and some allow complex options. The result of the `break` method is a BreakIterator. For many non-trivial cases like this, analogous APIs are put in ECMA-402's Intl object. This allows for the work that happens on each instantiation to be shared, improving performance. We could make a convenience method on String as a follow-on proposal.
+
+Q: Why is this API based on iterating over break locations, rather than segments?
+
+Break locations are a more flexible, precise and basic notion, which is a good basis for higher-level processing. This API is based on a Segmenter object, which serves as a factory for break iterators. See [#59](https://github.com/tc39/proposal-intl-segmenter/issues/59) for further discussion.
