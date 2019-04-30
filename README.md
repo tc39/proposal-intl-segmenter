@@ -22,13 +22,13 @@ let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
 let iterator = segmenter.segment("Ceci n'est pas une pipe");
 
 // Iterate over it!
-for (let {segment, breakType} of iterator) {
-  console.log(`segment: ${segment} breakType: ${breakType}`);
+for (let {index, breakType} of iterator) {
+  console.log(`index: ${index} breakType: ${breakType}`);
   break;
 }
 
 // logs the following to the console:
-// segment: Ceci breakType: letter
+// index: 4 breakType: letter
 ```
 
 ## API
