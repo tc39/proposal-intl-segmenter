@@ -22,13 +22,13 @@ let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
 let iterator = segmenter.segment("Ceci n'est pas une pipe");
 
 // Iterate over it!
-for (let {segment, breakType} of iterator) {
-  console.log(`segment: ${segment} breakType: ${breakType}`);
+for (let {segment, precedingSegmentType } of iterator) {
+  console.log(`segment: ${segment} precedingSegmentType : ${precedingSegmentType}`);
   break;
 }
 
 // logs the following to the console:
-// segment: Ceci breakType: letter
+// segment: Ceci precedingSegmentType: letter
 ```
 
 ## API
@@ -53,7 +53,7 @@ This class iterates over segmentation boundaries of a particular string.
 
 #### `%SegmentIterator%.prototype.next()`
 
-The `next` method, to use finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `segment` and `breakType`. The `segment` contains the substring between the previous break location and the newly found break location; the `breakType` describes which sort of segment it is (TODO: define possible values, not part of UTS). This method defines the iteration protocol support for SegmentIterators, and is present for convenience; other methods expose a richer API.
+The `next` method, to use finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `segment` and `precedingSegmentType`. The `segment` contains the substring between the previous break location and the newly found break location; the `precedingSegmentType` describes which sort of segment it is (TODO: define possible values, not part of UTS). This method defines the iteration protocol support for SegmentIterators, and is present for convenience; other methods expose a richer API.
 
 #### `%SegmentIterator%.prototype.following(index)`
 
@@ -67,9 +67,9 @@ Move the iterator to the previous break position before the given code unit inde
 
 Return the code unit index of the most recently discovered break position, as an offset from the beginning of the string. Initially the `index` is 0.
 
-#### `get %SegmentIterator%.prototype.breakType`
+#### `get %SegmentIterator%.prototype.precedingSegmentType`
 
-The `breakType` of the most recently discovered segment. If there is no current segment (e.g., a just-instantiated SegmentIterator, or one which has reached the end), or if the break type is "grapheme", then this will be `undefined`.
+The `precedingSegmentType` of the segment which precedes the current iterator location in logical order. If there is no preceding segment (e.g., a just-instantiated SegmentIterator), or if the break type is "grapheme", then this will be `undefined`.
 
 ## FAQ
 
@@ -95,10 +95,10 @@ A: Hyphenation is expected to have a different sort of API shape for various rea
 
 Q: Why is this API stateful?
 
-It would be possible to make a stateless API without a SegmentIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next break before or after. This method would return an object `{breakType, index}` similar to what `next()` returns in this API. However, there are a few downsides to this approach:
+It would be possible to make a stateless API without a SegmentIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next break before or after. This method would return an object `{precedingSegmentType, index}` similar to what `next()` returns in this API. However, there are a few downsides to this approach:
 - Performance:
   - Often, JavaScript implementations need to take an extra step to convert an input string into a form that's usable for the external internationalization library. When querying several break positions on a single string, it is nice to reuse the new form of the string; it would be difficult to cache this and invalidate the cache when appropriate.
-  - The `{breakType, index}` object may be a difficult allocation to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
+  - The `{precedingSegmentType, index}` object may be a difficult allocation to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
 - Convenience: Many (most?) usages of this API want to iterate through a string, either forwards or backwards, and get all of the appropriate breaks, possibly interspersed with doing related work. A stateful API may be more terse for this sort of use case--no need to keep track of the previous break position and feed it back in.
 
 It is easy to create a stateless API based on this stateful one, or vice versa, in user JavaScript code.

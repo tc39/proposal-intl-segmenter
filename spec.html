@@ -236,7 +236,7 @@ emu-issue:before {
         1. Let _iterator_.[[SegmentIteratorSegmenter]] be _segmenter_.
         1. Let _iterator_.[[SegmentIteratorString]] be _string_.
         1. Let _iterator_.[[SegmentIteratorIndex]] be *0*.
-        1. Let _iterator_.[[SegmentIteratorBreakType]] be *undefined*.
+        1. Let _iterator_.[[SegmentIteratorPrecedingSegmentType]] be *undefined*.
       </emu-alg>
     </emu-clause>
 
@@ -250,15 +250,15 @@ emu-issue:before {
         1. Let _len_ be the length of _string_.
         1. If _direction_ is ~forwards~ and _index_ is _len_, or if _direction_ is ~backwards~ and _index_ is *0*, return *true*.
         1. Find the next or previous (based on _direction_) break in _string_ from the code unit index _index_ based on the locale, and granularity in _segmenter_.[[Locale]], _segmenter_.[[SegmenterGranularity]].
-        1. Set _iterator_.[[SegmentIteratorBreakType]] to a value representing the type of break found, using one of the values found in the table <emu-xref href="#break-type-table"></emu-xref>, or `undefined` if the boundaries of the string are reached, or if there is no meaningful type for the granularity.
+        1. Set _iterator_.[[SegmentIteratorPrecedingSegmentType]] to a value representing the type of the segment which precedes the boundary, using one of the values found in the table <emu-xref href="#preceding-segment-type-table"></emu-xref>, or `undefined` if the boundaries of the string are reached, or if there is no meaningful type for the granularity.
         1. Set _iterator_.[[SegmentIteratorIndex]] to the code unit index of the newly found break position.
         1. Return *false*.
       </emu-alg>
-      <emu-table id="break-type-table" caption="[[SegmentIteratorBreakType]] values">
+      <emu-table id="preceding-segment-type-table" caption="[[SegmentIteratorPrecedingSegmentType]] values">
         <table>
           <tr>
             <th>Granularity</th>
-            <th>breakType</th>
+            <th>precedingSegmentType</th>
             <th>Meaning</th>
           </tr>
           <tr>
@@ -317,10 +317,10 @@ emu-issue:before {
           1. Let _newIndex_ be _iterator_.[[SegmentIteratorIndex]].
           1. Let _string_ be _iterator_.[[SegmentIteratorString]].
           1. Let _segment_ be the substring of _string_ from _previousIndex_ to _newIndex_, inclusive of _previousIndex_ and exclusive of _newIndex_.
-          1. Let _breakType_ be _iterator_.[[SegmentIteratorBreakType]].
+          1. Let _precedingSegmentType_ be _iterator_.[[SegmentIteratorPrecedingSegmentType]].
           1. Let _result_ be ! ObjectCreate(%ObjectPrototype%).
           1. Perform ! CreateDataProperty(_result_ `"segment"`, _segment_).
-          1. Perform ! CreateDataProperty(_result_, `"breakType"`, _breakType_).
+          1. Perform ! CreateDataProperty(_result_, `"precedingSegmentType"`, _precedingSegmentType_).
           1. Perform ! CreateDataProperty(_result_, `"index"`, _newIndex_).
           1. Return CreateIterResultObject(_result_, *false*).
         </emu-alg>
@@ -363,12 +363,12 @@ emu-issue:before {
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-segment-iterator-prototype-breakType">
-        <h1>get %SegmentIteratorPrototype%.breakType</h1>
+      <emu-clause id="sec-segment-iterator-prototype-precedingSegmentType">
+        <h1>get %SegmentIteratorPrototype%.precedingSegmentType</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
           1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. Return _iterator_.[[SegmentIteratorBreakType]].
+          1. Return _iterator_.[[SegmentIteratorPrecedingSegmentType]].
         </emu-alg>
       </emu-clause>
     </emu-clause>
