@@ -22,7 +22,7 @@ let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
 let iterator = segmenter.segment("Ceci n'est pas une pipe");
 
 // Iterate over it!
-for (let {segment, precedingSegmentType } of iterator) {
+for (let {segment, precedingSegmentType} of iterator) {
   console.log(`segment: ${segment} precedingSegmentType : ${precedingSegmentType}`);
   break;
 }
