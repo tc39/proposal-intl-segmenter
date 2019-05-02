@@ -69,7 +69,7 @@ Return the code unit index of the most recently discovered break position, as an
 
 #### `get %SegmentIterator%.prototype.precedingSegmentType`
 
-The `precedingSegmentType` of the segment which precedes the current iterator location in logical order. If there is no preceding segment (e.g., a just-instantiated SegmentIterator), or if the break type is "grapheme", then this will be `undefined`.
+The type of the segment which precedes the current iterator location in logical order. If there is no preceding segment (e.g., a just-instantiated SegmentIterator), or if the granularity is "grapheme", then this will be `undefined`.
 
 ## FAQ
 
