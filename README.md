@@ -109,4 +109,4 @@ A: All of these break types are actually locale-dependent, and some allow comple
 
 Q: What exactly does the index refer to?
 
-An index *n* refers to the boundary preceding the code unit *n*. For example, when iterating over the string "Hello, world💙" by words in English, there will be boundaries at 0, 5, 6, 7, 12, and 1. The definition of these boundary indices does not depend on whether forwards or backwards iteration is used.
+An index *n* refers to the boundary preceding the code unit *n*. For example, when iterating over the string "Hello, world💙" by words in English, there will be boundaries at 0, 5, 6, 7, 12, and 14. The definition of these boundary indices does not depend on whether forwards or backwards iteration is used.
