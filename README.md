@@ -54,7 +54,7 @@ This class iterates over segmentation boundaries of a particular string.
 
 #### `%SegmentIterator%.prototype.next()`
 
-The `next` method, to use finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `segment` and `precedingSegmentType`. The `segment` contains the substring between the previous break location and the newly found break location; the `precedingSegmentType` describes which sort of segment it is (TODO: define possible values, not part of UTS). This method defines the iteration protocol support for SegmentIterators, and is present for convenience; other methods expose a richer API.
+The `next` method finds the next boundary and returns an `IterationResult`, where the `value` is an object with fields `index` and `precedingSegmentType`. `index` contains the code unit index immediately following the newly found boundary; the `precedingSegmentType` describes which sort of segment it precedes it (TODO: define possible values, not part of UTS). This method defines the iteration protocol support for SegmentIterators, and is present for convenience; other methods expose a richer API.
 
 #### `%SegmentIterator%.prototype.following(index)`
 
