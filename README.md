@@ -22,13 +22,14 @@ let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
 let iterator = segmenter.segment("Ceci n'est pas une pipe");
 
 // Iterate over it!
-for (let {segment, precedingSegmentType} of iterator) {
-  console.log(`segment: ${segment} precedingSegmentType : ${precedingSegmentType}`);
+
+for (let {index, precedingSegmentType} of iterator) {
+  console.log(`index: ${index} precedingSegmentType: ${precedingSegmentType}`);
   break;
 }
 
 // logs the following to the console:
-// segment: Ceci precedingSegmentType: letter
+// index: 4 precedingSegmentType: letter
 ```
 
 ## API
@@ -106,3 +107,7 @@ It is easy to create a stateless API based on this stateful one, or vice versa, 
 Q: Why is this an Intl API instead of String methods?
 
 A: All of these break types are actually locale-dependent, and some allow complex options. The result of the `segment` method is a SegmentIterator. For many non-trivial cases like this, analogous APIs are put in ECMA-402's Intl object. This allows for the work that happens on each instantiation to be shared, improving performance. We could make a convenience method on String as a follow-on proposal.
+
+Q: What exactly does the index refer to?
+
+An index *n* refers to the boundary preceding the code unit *n*. For example, when iterating over the string "Hello, world💙" by words in English, there will be boundaries at 0, 5, 6, 7, 12, and 14. The definition of these boundary indices does not depend on whether forwards or backwards iteration is used.
