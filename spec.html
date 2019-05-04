@@ -344,7 +344,7 @@ emu-issue:before {
           1. Let _length_ be the length of _iterator_.[[SegmentIteratorString]].
           1. If _from_ is not *undefined*,
             1. Let _from_ be ? ToIndex(_from_).
-            1. If _from_ &ge; _length_, throw a *RangeError* exception.
+            1. If _from_ &lt; 0 or _from_ &ge; _length_, throw a *RangeError* exception.
             1. Let _iterator_.[[SegmentIteratorIndex]] be _from_.
           1. ! AdvanceSegmentIterator(_iterator_, ~forwards~).
           1. If _iterator_.[[SegmentIteratorIndex]] = _length_, return *true*.
