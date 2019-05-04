@@ -15,21 +15,34 @@ Chrome has been shipping its own nonstandard segmentation API called `Intl.v8Bre
 ## Example
 
 ```js
-// Create a segmenter in your locale
+// Create a locale-specific word segmenter
 let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
 
-// Get an iterator over a string
-let iterator = segmenter.segment("Ceci n'est pas une pipe");
+// Use it to get a boundary iterator for a string
+let input = "Moi?  N'est-ce pas.";
+let boundaries = segmenter.segment(input);
 
-// Iterate over it!
-
-for (let {index, precedingSegmentType} of iterator) {
-  console.log(`index: ${index} precedingSegmentType: ${precedingSegmentType}`);
-  break;
+// Use that for segmentation!
+let lastIndex = 0;
+for (let {index, precedingSegmentType} of boundaries) {
+  let segment = input.slice(lastIndex, index);
+  console.log("segment at [%d, %d) of type %o: «%s»",
+    lastIndex, index,
+    precedingSegmentType,
+    input.slice(lastIndex, index)
+  );
+  lastIndex = index;
 }
-
-// logs the following to the console:
-// index: 4 precedingSegmentType: letter
+// console.log output:
+// segment at [0, 3) of type "word": «Moi»
+// segment at [3, 4) of type "none": «?»
+// segment at [4, 6) of type "none": «  »
+// segment at [6, 11) of type "word": «N'est»
+// segment at [11, 12) of type "none": «-»
+// segment at [12, 14) of type "word": «ce»
+// segment at [14, 15) of type "none": « »
+// segment at [15, 18) of type "word": «pas»
+// segment at [18, 19) of type "none": «.»
 ```
 
 ## API
