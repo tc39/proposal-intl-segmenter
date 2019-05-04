@@ -125,13 +125,13 @@ This class iterates over segment boundaries of a particular string.
 
 The `next` method implements the <i>Iterator</i> interface, finding the next boundary and returning an `IteratorResult` object relating to it. The object includes `index` and `precedingSegmentType` fields corresponding to iteration result data.
 
-#### `%SegmentIterator%.prototype.following(index)`
+#### `%SegmentIterator%.prototype.following(from)`
 
-Move the iterator to the next break position after the given code unit index _index_, or if no index is provided, after its current index. Returns *true* if the end of the string was reached.
+Move the iterator index to the boundary following the code unit index _from_ (or after its current index if _from_ is *undefined*). Returns *true* if the end of the string was reached.
 
-#### `%SegmentIterator%.prototype.preceding(index)`
+#### `%SegmentIterator%.prototype.preceding(from)`
 
-Move the iterator to the previous break position before the given code unit index _index_, or if no index is provided, before its current index. Returns *true* if the beginning of the string was reached.
+Move the iterator index to the boundary preceding the position before the code unit index _from_ (or before its current index if _from_ is *undefined*). Returns *true* if the beginning of the string was reached.
 
 #### `get %SegmentIterator%.prototype.index`
 
