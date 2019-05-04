@@ -268,7 +268,7 @@ emu-issue:before {
           1. Using locale _locale_ and granularity _granularity_, find the last boundary in _string_ that precedes the code unit at index _nextIndex_ - 1.
           1. If no boundary was found, let _segmentStart_ be 0. Otherwise, let _segmentStart_ be the integer index in _string_ that immediately follows the boundary.
           1. Let _precedingSegment_ be the String value containing consecutive code units from _string_ beginning with the code unit at index _segmentStart_ and ending with the code unit at index _nextIndex_ - 1.
-          1. Set _iterator_.[[SegmentIteratorPrecedingSegmentType]] to a value from the &ldquo;Segment Type&rdquo; column of <emu-xref href="#segment-type-table"></emu-xref> describing _precedingSegment_ according to granularity _granularity_ and locale _locale_ and the &ldquo;Meaning&rdquo; column.
+          1. Set _iterator_.[[SegmentIteratorPrecedingSegmentType]] to the value from the &ldquo;Segment Type&rdquo; column of the row in <emu-xref href="#segment-type-table"></emu-xref> in which the &ldquo;Granularity&rdquo; column matches _granularity_ and the &ldquo;Meaning&rdquo; column describes _precedingSegment_ according to the locale _locale_.
         1. Return *false*.
       </emu-alg>
       <emu-table id="segment-type-table" caption="Segment Types">
@@ -281,33 +281,27 @@ emu-issue:before {
           <tr>
             <td>`"grapheme"`</td>
             <td>`undefined`</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td rowspan=2>`"word"`</td>
-            <td>`"none"`</td>
-            <td>"words" that do not fit into any of other categories. Includes spaces and most punctuation.</td>
+            <td>a grapheme cluster</td>
           </tr>
           <tr>
             <td>`"word"`</td>
-            <td>words that appear to be numbers, letters, kana characters, ideographic characters, etc</td>
+            <td>`"word"`</td>
+            <td>a segment containing numbers, letters, kana, ideographic characters, or other word-like contents</td>
           </tr>
           <tr>
-            <td rowspan=2>`"sentence"`</td>
+            <td>`"word"`</td>
+            <td>`"none"`</td>
+            <td>a segment that is not word-like, often consisting of spaces or punctuation</td>
+          </tr>
+          <tr>
+            <td>`"sentence"`</td>
             <td>`"term"`</td>
-            <td>
-              sentences ending with a sentence terminator
-              ('.', '?', '!', etc.) character, possibly followed by a
-              hard separator (CR, LF, PS, etc.)
-            </td>
+            <td>a segment that ends with a sentence terminator ('.', '?', '!', etc.) optionally followed by any amount of closing punctuation ('"', ']', '»', etc.), any amount of whitespace, and then an optional hard separator (CR, LF, PS, etc.)</td>
           </tr>
           <tr>
+            <td>`"sentence"`</td>
             <td>`"sep"`</td>
-            <td>
-              sentences that do not contain an ending
-              sentence terminator ('.', '?', '!', etc.) character, but
-              are ended only by a hard separator (CR, LF, PS, etc.)
-            </td>
+            <td>a segment that does not end with a sentence terminator ('.', '?', '!', etc.) section, but is either at the end of the string or ends with a hard separator (CR, LF, PS, etc.)</td>
           </tr>
         </table>
       </emu-table>
