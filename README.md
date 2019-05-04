@@ -12,7 +12,11 @@ Grapheme, word and sentence segmentation is defined in [UAX 29](http://unicode.o
 
 Chrome has been shipping its own nonstandard segmentation API called `Intl.v8BreakIterator` for a few years. However, [for a few reasons](https://github.com/tc39/ecma402/issues/60#issuecomment-194041835), this API does not seem suitable for standardization. This explainer outlines a new API which attempts to be more in accordance with modern, post-ES2015 JavaScript API design.
 
-## Example
+## Examples
+
+### Boundary iteration
+
+Objects returned by the `segment` method of an Intl.Segmenter instance expose segmentation boundaries via the iterable interface.
 
 ```js
 // Create a locale-specific word segmenter
@@ -43,6 +47,50 @@ for (let {index, precedingSegmentType} of boundaries) {
 // segment at [14, 15) of type "none": « »
 // segment at [15, 18) of type "word": «pas»
 // segment at [18, 19) of type "none": «.»
+```
+
+For performance and flexibility, they also expose a random-access interface.
+
+```js
+// ┃0 1 2 3 4 5┃6┃7┃8┃9
+// ┃A l l o n s┃-┃y┃!┃
+let input = "Allons-y!";
+
+let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
+let boundaries = segmenter.segment(input);
+
+boundaries.index                // → 0
+boundaries.precedingSegmentType // → undefined
+
+boundaries.following()          // → false
+boundaries.index                // → 6
+boundaries.precedingSegmentType // → "word"
+
+boundaries.following(5)         // → false
+boundaries.index                // → 6
+boundaries.precedingSegmentType // → "word"
+
+boundaries.following()          // → false
+boundaries.index                // → 7
+boundaries.precedingSegmentType // → "none"
+
+boundaries.following(8)         // → true
+boundaries.index                // → 9
+boundaries.precedingSegmentType // → "none"
+
+boundaries.following()          // → RangeError
+boundaries.index                // → 9
+
+boundaries.preceding()          // → false
+boundaries.index                // → 8
+boundaries.precedingSegmentType // → "word"
+
+boundaries.preceding(3)         // → false
+boundaries.index                // → 0
+boundaries.precedingSegmentType // → undefined
+
+boundaries.preceding()          // → RangeError
+boundaries.index                // → 0
 ```
 
 ## API
