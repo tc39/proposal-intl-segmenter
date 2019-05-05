@@ -16,7 +16,7 @@ Chrome has been shipping its own nonstandard segmentation API called `Intl.v8Bre
 
 ### Boundary iteration
 
-Objects returned by the `segment` method of an Intl.Segmenter instance expose segmentation boundaries via the iterable interface.
+Objects returned by the `segment` method of an Intl.Segmenter instance expose segmentation boundaries via the <i>Iterable</i> interface.
 
 ```js
 // Create a locale-specific word segmenter
