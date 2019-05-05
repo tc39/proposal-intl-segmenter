@@ -242,7 +242,7 @@ emu-issue:before {
 
     <emu-clause id="sec-AdvanceSegmentIterator" aoid="AdvanceSegmentIterator">
       <h1>AdvanceSegmentIterator ( _iterator_, _direction_ )</h1>
-      <p>The abstract operation AdvanceSegmentIterator takes as arguments a segment iterator _iterator_ and a ~forwards~ or ~backwards~ direction _direction_. The operation attempts to advance the iterator in the given direction according to the effective locale and options of the iterator's constructing segmenter, and returns a Boolean value indicating whether or not iteration in the given direction was already complete. It performs the following steps:</p>
+      <p>The abstract operation AdvanceSegmentIterator takes as arguments a segment iterator _iterator_ and a ~forwards~ or ~backwards~ _direction_. The operation attempts to advance the iterator in the given direction according to the effective locale and options of the iterator's constructing segmenter, and returns a Boolean value that is *true* if and only if iteration in the given direction was already complete. It performs the following steps:</p>
       <emu-alg>
         1. Let _segmenter_ be _iterator_.[[SegmentIteratorSegmenter]].
         1. Let _locale_ be _segmenter_.[[Locale]].
@@ -262,7 +262,7 @@ emu-issue:before {
           1. If no boundary was found, let _nextIndex_ be 0. Otherwise, let _nextIndex_ be the integer index in _string_ that immediately follows the boundary.
         1. Set _iterator_.[[SegmentIteratorIndex]] to _nextIndex_.
         1. If _nextIndex_ = 0, then
-          1. Set _iterator_.[[SegmentIteratorPrecedingSegmentType]] to `undefined`.
+          1. Set _iterator_.[[SegmentIteratorPrecedingSegmentType]] to *undefined*.
         1. Else
           1. Assert: _granularity_ is listed in the &ldquo;Granularity&rdquo; column of <emu-xref href="#segment-type-table"></emu-xref>.
           1. Using locale _locale_ and granularity _granularity_, find the last boundary in _string_ that precedes the code unit at index _nextIndex_ - 1.
@@ -280,7 +280,7 @@ emu-issue:before {
           </tr>
           <tr>
             <td>`"grapheme"`</td>
-            <td>`undefined`</td>
+            <td>*undefined*</td>
             <td>a grapheme cluster</td>
           </tr>
           <tr>
@@ -337,12 +337,12 @@ emu-issue:before {
 
       <emu-clause id="sec-segment-iterator-prototype-following">
         <h1>%SegmentIteratorPrototype%.following( [ _from_ ] )</h1>
-        <p>The `following` method moves the iterator index to the boundary following the code unit index _from_ (or after the current index of the iterator if _from_ is *undefined*) and returns a Boolean value indicating whether or not the end of the string was reached. It performs the following steps:</p>
+        <p>The `following` method moves the iterator index to the boundary following the code unit index _from_ (or after the current index of the iterator if _from_ is *undefined*) and returns a Boolean value that is *true* if and only if the end of the string was reached. It performs the following steps:</p>
         <emu-alg>
           1. Let _iterator_ be *this* value.
           1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
           1. Let _length_ be the length of _iterator_.[[SegmentIteratorString]].
-          1. If _from_ is not *undefined*,
+          1. If _from_ is not *undefined*, then
             1. Let _from_ be ? ToIndex(_from_).
             1. If _from_ &lt; 0 or _from_ &ge; _length_, throw a *RangeError* exception.
             1. Let _iterator_.[[SegmentIteratorIndex]] be _from_.
@@ -354,14 +354,14 @@ emu-issue:before {
 
       <emu-clause id="sec-segment-iterator-prototype-preceding">
         <h1>%SegmentIteratorPrototype%.preceding( [ _from_ ] )</h1>
-        <p>The `preceding` method moves the iterator index to the boundary preceding the position before the code unit index _from_ (or before the current index of the iterator if _from_ is *undefined*) and returns a Boolean value indicating whether or not the beginning of the string was reached. It performs the following steps:</p>
+        <p>The `preceding` method moves the iterator index to the boundary preceding the position before the code unit index _from_ (or before the current index of the iterator if _from_ is *undefined*) and returns a Boolean value that is *true* if and only if the beginning of the string was reached. It performs the following steps:</p>
         <emu-alg>
           1. Let _iterator_ be *this* value.
           1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. If _from_ is not *undefined*,
+          1. If _from_ is not *undefined*, then
             1. Let _from_ be ? ToIndex(_from_).
             1. Let _length_ be the length of _iterator_.[[SegmentIteratorString]].
-            1. If _from_ &gt; _length_ or _from_ = 0, throw a *RangeError* exception.
+            1. If _from_ = 0 or _from_ &gt; _length_, throw a *RangeError* exception.
             1. Let _iterator_.[[SegmentIteratorIndex]] be _from_.
           1. ! AdvanceSegmentIterator(_iterator_, ~backwards~).
           1. If _iterator_.[[SegmentIteratorIndex]] = 0, return *true*.

@@ -58,11 +58,11 @@ The `next` method finds the next boundary and returns an `IterationResult`, wher
 
 #### `%SegmentIterator%.prototype.following(from)`
 
-Move the iterator index to the boundary following the code unit index _from_ (or after its current index if _from_ is *undefined*). Returns *true* if the end of the string was reached.
+Move the iterator index to the boundary following the code unit index _from_ (or after its current index if _from_ is not provided). Returns *true* if the end of the string was reached.
 
 #### `%SegmentIterator%.prototype.preceding(from)`
 
-Move the iterator index to the boundary preceding the position before the code unit index _from_ (or before its current index if _from_ is *undefined*). Returns *true* if the beginning of the string was reached.
+Move the iterator index to the boundary preceding the position before the code unit index _from_ (or before its current index if _from_ is not provided). Returns *true* if the beginning of the string was reached.
 
 #### `get %SegmentIterator%.prototype.index`
 
