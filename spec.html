@@ -243,6 +243,7 @@ emu-issue:before {
     <emu-clause id="sec-AdvanceSegmentIterator" aoid="AdvanceSegmentIterator">
       <h1>AdvanceSegmentIterator ( _iterator_, _direction_ )</h1>
       <p>The abstract operation AdvanceSegmentIterator takes as arguments a segment iterator _iterator_ and a ~forwards~ or ~backwards~ _direction_. The operation attempts to advance the iterator to the next boundary in the given direction according to the effective locale and options of the iterator's constructing segmenter, and returns a Boolean value that is *true* if and only if iteration in the given direction was already complete. It performs the following steps:</p>
+      <emu-note>Boundary determination is implementation-dependent, but general default algorithms are specified in Unicode Standard Annex 29 (available at <a href="https://www.unicode.org/reports/tr29/">https://www.unicode.org/reports/tr29/</a>). It is recommended that implementations use locale-sensitive tailorings such as those provided by the Common Locale Data Repository (available at <a href="http://cldr.unicode.org">http://cldr.unicode.org</a>).</emu-note>
       <emu-alg>
         1. Let _segmenter_ be _iterator_.[[SegmentIteratorSegmenter]].
         1. Let _locale_ be _segmenter_.[[Locale]].
@@ -305,7 +306,6 @@ emu-issue:before {
           </tr>
         </table>
       </emu-table>
-      <emu-note>This specification does not require a specific algorithm, but an algorithm for all breaks is specified in UTS 29.</emu-note>
     </emu-clause>
 
     <emu-clause id="sec-segment-iterator-prototype">
