@@ -49,7 +49,7 @@ for (let {index, precedingSegmentType} of boundaries) {
 // segment at [18, 19) of type "none": «.»
 ```
 
-For performance and flexibility, they also expose a random-access interface.
+For performance and flexibility, they also support direct random access.
 
 ```js
 // ┃0 1 2 3 4 5┃6┃7┃8┃9
@@ -58,38 +58,39 @@ let input = "Allons-y!";
 
 let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
 let boundaries = segmenter.segment(input);
+let done = false;
 
 boundaries.index                // → 0
 boundaries.precedingSegmentType // → undefined
 
-boundaries.following()          // → false
+done = boundaries.following()   // → false
 boundaries.index                // → 6
-boundaries.precedingSegmentType // → "word"
+boundaries.precedingSegmentType // → "word" (describing "Allons")
 
-boundaries.following(5)         // → false
+done = boundaries.following(5)  // → false
 boundaries.index                // → 6
-boundaries.precedingSegmentType // → "word"
+boundaries.precedingSegmentType // → "word" (describing "Allons")
 
-boundaries.following()          // → false
+done = boundaries.following()   // → false
 boundaries.index                // → 7
-boundaries.precedingSegmentType // → "none"
+boundaries.precedingSegmentType // → "none" (describing "-")
 
-boundaries.following(8)         // → true
+done = boundaries.following(8)  // → true
 boundaries.index                // → 9
-boundaries.precedingSegmentType // → "none"
+boundaries.precedingSegmentType // → "none" (describing "!")
 
-boundaries.following()          // → RangeError
+done = boundaries.following()   // → RangeError
 boundaries.index                // → 9
 
-boundaries.preceding()          // → false
+done = boundaries.preceding()   // → false
 boundaries.index                // → 8
-boundaries.precedingSegmentType // → "word"
+boundaries.precedingSegmentType // → "word" (describing "y")
 
-boundaries.preceding(3)         // → false
+done = boundaries.preceding(3)  // → false
 boundaries.index                // → 0
 boundaries.precedingSegmentType // → undefined
 
-boundaries.preceding()          // → RangeError
+done = boundaries.preceding()   // → RangeError
 boundaries.index                // → 0
 ```
 
