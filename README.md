@@ -123,7 +123,7 @@ This class iterates over segment boundaries of a particular string.
 
 #### `%SegmentIterator%.prototype.next()`
 
-The `next` method implements the _Iterator_ interface, finding the next boundary and returning an `IteratorResult` object relating to it. The object includes `index` and `precedingSegmentType` fields corresponding to iteration result data.
+The `next` method implements the <i>Iterator</i> interface, finding the next boundary and returning an `IteratorResult` object relating to it. The object includes `index` and `precedingSegmentType` fields corresponding to iteration result data.
 
 #### `%SegmentIterator%.prototype.following(index)`
 
