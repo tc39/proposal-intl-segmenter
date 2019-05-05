@@ -53,7 +53,7 @@ This class iterates over segment boundaries of a particular string.
 #### Iteration result data
 
 * `index` is the code point index immediately following the last found boundary.
-* `precedingSegmentType` is a value characterizing the segment preceding last found boundary. Some particularly important values are:
+* `precedingSegmentType` characterizes the segment preceding the last found boundary. Some particularly important values are:
   * For `word` granularity, "word" for letter/number/ideograph segments vs. "none" for spaces/punctuation/etc.
   * For `sentence` granularity, "term" for segments with terminating punctuation vs. "sep" for those without it.
 
