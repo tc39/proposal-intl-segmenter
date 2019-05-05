@@ -242,7 +242,7 @@ emu-issue:before {
 
     <emu-clause id="sec-AdvanceSegmentIterator" aoid="AdvanceSegmentIterator">
       <h1>AdvanceSegmentIterator ( _iterator_, _direction_ )</h1>
-      <p>The abstract operation AdvanceSegmentIterator takes as arguments a segment iterator _iterator_ and a ~forwards~ or ~backwards~ _direction_. The operation attempts to advance the iterator in the given direction according to the effective locale and options of the iterator's constructing segmenter, and returns a Boolean value that is *true* if and only if iteration in the given direction was already complete. It performs the following steps:</p>
+      <p>The abstract operation AdvanceSegmentIterator takes as arguments a segment iterator _iterator_ and a ~forwards~ or ~backwards~ _direction_. The operation attempts to advance the iterator to the next boundary in the given direction according to the effective locale and options of the iterator's constructing segmenter, and returns a Boolean value that is *true* if and only if iteration in the given direction was already complete. It performs the following steps:</p>
       <emu-alg>
         1. Let _segmenter_ be _iterator_.[[SegmentIteratorSegmenter]].
         1. Let _locale_ be _segmenter_.[[Locale]].
