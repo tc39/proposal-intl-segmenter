@@ -6,7 +6,7 @@ Stage 2 proposal, champion Daniel Ehrenberg (Igalia)
 
 A code point is not a "letter" or a displayed unit on the screen. That designation goes to the grapheme, which can consist of multiple code points (e.g., including accent marks, conjoining Korean characters). Unicode defines a grapheme segmentation algorithm to find the boundaries between graphemes. This may be useful in implementing advanced editors/input methods, or other forms of text processing.
 
-Unicode also defines an algorithm for finding breaks between words and sentences, which CLDR tailors per locale. These boundaries may be useful, for example, in implementing a text editor which has commands for jumping or highlighting words and sentences.
+Unicode also defines an algorithm for finding boundaries between words and sentences, which CLDR tailors per locale. These boundaries may be useful, for example, in implementing a text editor which has commands for jumping or highlighting words and sentences.
 
 Grapheme, word and sentence segmentation is defined in [UAX 29](http://unicode.org/reports/tr29/). Web browsers need an implementation of this kind of segmentation to function, and shipping it to JavaScript saves memory and network bandwidth as compared to expecting developers to implement it themselves in JavaScript.
 
@@ -135,17 +135,17 @@ Move the iterator index to the boundary preceding the position before the code u
 
 #### `get %BoundaryIterator%.prototype.index`
 
-Return the code unit index of the most recently discovered boundary position, as an offset from the beginning of the string. Initially the `index` is 0.
+Return the current boundary position as a count of code units in string that precede it. The initial value is 0, corresponding to a boundary at the start of the string.
 
 #### `get %BoundaryIterator%.prototype.precedingSegmentType`
 
-The type of the segment which precedes the current iterator location in logical order. If there is no preceding segment (e.g., a just-instantiated BoundaryIterator), or if the granularity is "grapheme", then this will be `undefined`.
+The type of the segment which precedes the current iterator location in logical order. If there is no preceding segment because the current index is at the start of the string, or if the granularity is "grapheme", then this will be `undefined`.
 
 ## FAQ
 
-Q: Why should we pass a locale and options bag for grapheme breaks? Isn't there just one way to do it?
+Q: Why should we pass a locale and options bag for grapheme boundaries? Isn't there just one way to do it?
 
-A: The situation is a little more complicated, e.g., for Indic scripts. Work is ongoing to support grapheme break options for these scripts better; see [this bug](http://unicode.org/cldr/trac/ticket/2142), and in particular [this CLDR wiki page](http://cldr.unicode.org/development/development-process/design-proposals/grapheme-usage). Seems like CLDR/ICU don't support this yet, but it's planned.
+A: The situation is a little more complicated, e.g., for Indic scripts. Work is ongoing to support grapheme boundary options for these scripts better; see [this bug](http://unicode.org/cldr/trac/ticket/2142), and in particular [this CLDR wiki page](http://cldr.unicode.org/development/development-process/design-proposals/grapheme-usage). Seems like CLDR/ICU don't support this yet, but it's planned.
 
 Q: Shouldn't we be putting new APIs in built-in modules?
 
@@ -165,17 +165,17 @@ A: Hyphenation is expected to have a different sort of API shape for various rea
 
 Q: Why is this API stateful?
 
-It would be possible to make a stateless API without a BoundaryIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next break before or after. This method would return an object `{precedingSegmentType, index}` similar to what `next()` returns in this API. However, there are a few downsides to this approach:
+It would be possible to make a stateless API without a BoundaryIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next boundary before or after. This method would return an object `{precedingSegmentType, index}` similar to what `next()` returns in this API. However, there are a few downsides to this approach:
 - Performance:
-  - Often, JavaScript implementations need to take an extra step to convert an input string into a form that's usable for the external internationalization library. When querying several break positions on a single string, it is nice to reuse the new form of the string; it would be difficult to cache this and invalidate the cache when appropriate.
+  - Often, JavaScript implementations need to take an extra step to convert an input string into a form that's usable for the external internationalization library. When querying several positions on a single string, it is nice to reuse the new form of the string; it would be difficult to cache this and invalidate the cache when appropriate.
   - The `{precedingSegmentType, index}` object may be a difficult allocation to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
-- Convenience: Many (most?) usages of this API want to iterate through a string, either forwards or backwards, and get all of the appropriate breaks, possibly interspersed with doing related work. A stateful API may be more terse for this sort of use case--no need to keep track of the previous break position and feed it back in.
+- Convenience: Many (most?) usages of this API want to iterate through a string, either forwards or backwards, and get all of the appropriate boundaries, possibly interspersed with doing related work. A stateful API may be more terse for this sort of use case--no need to keep track of the previous position and feed it back in.
 
 It is easy to create a stateless API based on this stateful one, or vice versa, in user JavaScript code.
 
 Q: Why is this an Intl API instead of String methods?
 
-A: All of these break types are actually locale-dependent, and some allow complex options. The result of the `segment` method is a BoundaryIterator. For many non-trivial cases like this, analogous APIs are put in ECMA-402's Intl object. This allows for the work that happens on each instantiation to be shared, improving performance. We could make a convenience method on String as a follow-on proposal.
+A: All of these boundary types are actually locale-dependent, and some allow complex options. The result of the `segment` method is a BoundaryIterator. For many non-trivial cases like this, analogous APIs are put in ECMA-402's Intl object. This allows for the work that happens on each instantiation to be shared, improving performance. We could make a convenience method on String as a follow-on proposal.
 
 Q: What exactly does the index refer to?
 
