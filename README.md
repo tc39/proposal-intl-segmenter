@@ -106,9 +106,9 @@ Interpretation of options:
 
 ### `Intl.Segmenter.prototype.segment(string)`
 
-This method creates a new `%SegmentIterator%` over the input string, which will lazily find breaks, starting at index 0.
+This method creates a new `%BoundaryIterator%` over the input string, which will lazily find segment boundaries, starting at index 0.
 
-### `%SegmentIterator%`
+### `%BoundaryIterator%`
 
 This class iterates over segment boundaries of a particular string.
 
@@ -119,27 +119,27 @@ This class iterates over segment boundaries of a particular string.
   * With `word` granularity, "word" for letter/number/ideograph segments vs. "none" for spaces/punctuation/etc.
   * With `sentence` granularity, "term" for segments with terminating punctuation vs. "sep" for those without it.
 
-### Methods on %SegmentIterator%:
+### Methods on %BoundaryIterator%:
 
-#### `%SegmentIterator%.prototype.next()`
+#### `%BoundaryIterator%.prototype.next()`
 
 The `next` method implements the <i>Iterator</i> interface, finding the next boundary and returning an `IteratorResult` object relating to it. The object includes `index` and `precedingSegmentType` fields corresponding to iteration result data.
 
-#### `%SegmentIterator%.prototype.following(from)`
+#### `%BoundaryIterator%.prototype.following(from)`
 
 Move the iterator index to the boundary following the code unit index _from_ (or after its current index if _from_ is not provided). Returns *true* if the end of the string was reached.
 
-#### `%SegmentIterator%.prototype.preceding(from)`
+#### `%BoundaryIterator%.prototype.preceding(from)`
 
 Move the iterator index to the boundary preceding the position before the code unit index _from_ (or before its current index if _from_ is not provided). Returns *true* if the beginning of the string was reached.
 
-#### `get %SegmentIterator%.prototype.index`
+#### `get %BoundaryIterator%.prototype.index`
 
-Return the code unit index of the most recently discovered break position, as an offset from the beginning of the string. Initially the `index` is 0.
+Return the code unit index of the most recently discovered boundary position, as an offset from the beginning of the string. Initially the `index` is 0.
 
-#### `get %SegmentIterator%.prototype.precedingSegmentType`
+#### `get %BoundaryIterator%.prototype.precedingSegmentType`
 
-The type of the segment which precedes the current iterator location in logical order. If there is no preceding segment (e.g., a just-instantiated SegmentIterator), or if the granularity is "grapheme", then this will be `undefined`.
+The type of the segment which precedes the current iterator location in logical order. If there is no preceding segment (e.g., a just-instantiated BoundaryIterator), or if the granularity is "grapheme", then this will be `undefined`.
 
 ## FAQ
 
@@ -165,7 +165,7 @@ A: Hyphenation is expected to have a different sort of API shape for various rea
 
 Q: Why is this API stateful?
 
-It would be possible to make a stateless API without a SegmentIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next break before or after. This method would return an object `{precedingSegmentType, index}` similar to what `next()` returns in this API. However, there are a few downsides to this approach:
+It would be possible to make a stateless API without a BoundaryIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next break before or after. This method would return an object `{precedingSegmentType, index}` similar to what `next()` returns in this API. However, there are a few downsides to this approach:
 - Performance:
   - Often, JavaScript implementations need to take an extra step to convert an input string into a form that's usable for the external internationalization library. When querying several break positions on a single string, it is nice to reuse the new form of the string; it would be difficult to cache this and invalidate the cache when appropriate.
   - The `{precedingSegmentType, index}` object may be a difficult allocation to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
@@ -175,7 +175,7 @@ It is easy to create a stateless API based on this stateful one, or vice versa, 
 
 Q: Why is this an Intl API instead of String methods?
 
-A: All of these break types are actually locale-dependent, and some allow complex options. The result of the `segment` method is a SegmentIterator. For many non-trivial cases like this, analogous APIs are put in ECMA-402's Intl object. This allows for the work that happens on each instantiation to be shared, improving performance. We could make a convenience method on String as a follow-on proposal.
+A: All of these break types are actually locale-dependent, and some allow complex options. The result of the `segment` method is a BoundaryIterator. For many non-trivial cases like this, analogous APIs are put in ECMA-402's Intl object. This allows for the work that happens on each instantiation to be shared, improving performance. We could make a convenience method on String as a follow-on proposal.
 
 Q: What exactly does the index refer to?
 
