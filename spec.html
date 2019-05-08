@@ -162,7 +162,7 @@ emu-issue:before {
         1. Let _segment_ be *this* value.
         1. If Type(_segment_) is not Object or _segment_ does not have an [[InitializedSegmenter]] internal slot, throw a *TypeError* exception.
         1. Let _string_ be ? ToString(_string_).
-        1. Return ? CreateSegmentIterator(_segment_, _string_).
+        1. Return ? CreateBoundaryIterator(_segment_, _string_).
       </emu-alg>
     </emu-clause>
 
@@ -221,35 +221,35 @@ emu-issue:before {
 
   </emu-clause>
 
-  <emu-clause id="segment-iterator-objects">
-    <h1>Segment Iterators</h1>
+  <emu-clause id="boundary-iterator-objects">
+    <h1>Boundary Iterators</h1>
 
     <p>
       The Intl.Segment.prototype.segment method returns iterators over the segments for a particular string. This section describes those iterator objects.
     </p>
 
-    <emu-clause id="sec-CreateSegmentIterator" aoid="CreateSegmentIterator">
-      <h1>CreateSegmentIterator ( _segmenter_, _string_ )</h1>
-      <p>When the abstract operation CreateSegmentIterator is called with Segmenter _segmenter_ and string _string_, the following steps are taken:</p>
+    <emu-clause id="sec-CreateBoundaryIterator" aoid="CreateBoundaryIterator">
+      <h1>CreateBoundaryIterator ( _segmenter_, _string_ )</h1>
+      <p>When the abstract operation CreateBoundaryIterator is called with Segmenter _segmenter_ and string _string_, the following steps are taken:</p>
       <emu-alg>
-        1. Let _iterator_ be ObjectCreate(%SegmentIteratorPrototype%).
-        1. Let _iterator_.[[SegmentIteratorSegmenter]] be _segmenter_.
-        1. Let _iterator_.[[SegmentIteratorString]] be _string_.
-        1. Let _iterator_.[[SegmentIteratorIndex]] be *0*.
-        1. Let _iterator_.[[SegmentIteratorPrecedingSegmentType]] be *undefined*.
+        1. Let _iterator_ be ObjectCreate(%BoundaryIteratorPrototype%).
+        1. Let _iterator_.[[BoundaryIteratorSegmenter]] be _segmenter_.
+        1. Let _iterator_.[[BoundaryIteratorString]] be _string_.
+        1. Let _iterator_.[[BoundaryIteratorIndex]] be *0*.
+        1. Let _iterator_.[[BoundaryIteratorPrecedingSegmentType]] be *undefined*.
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-AdvanceSegmentIterator" aoid="AdvanceSegmentIterator">
-      <h1>AdvanceSegmentIterator ( _iterator_, _direction_ )</h1>
-      <p>The abstract operation AdvanceSegmentIterator takes as arguments a segment iterator _iterator_ and a ~forwards~ or ~backwards~ _direction_. The operation attempts to advance the iterator to the next boundary in the given direction according to the effective locale and options of the iterator's constructing segmenter, and returns a Boolean value that is *true* if and only if iteration in the given direction was already complete. It performs the following steps:</p>
+    <emu-clause id="sec-AdvanceBoundaryIterator" aoid="AdvanceBoundaryIterator">
+      <h1>AdvanceBoundaryIterator ( _iterator_, _direction_ )</h1>
+      <p>The abstract operation AdvanceBoundaryIterator takes as arguments a boundary iterator _iterator_ and a ~forwards~ or ~backwards~ _direction_. The operation attempts to advance the iterator to the next boundary in the given direction according to the effective locale and options of the iterator's constructing segmenter, and returns a Boolean value that is *true* if and only if iteration in the given direction was already complete. It performs the following steps:</p>
       <emu-note>Boundary determination is implementation-dependent, but general default algorithms are specified in Unicode Standard Annex 29 (available at <a href="https://www.unicode.org/reports/tr29/">https://www.unicode.org/reports/tr29/</a>). It is recommended that implementations use locale-sensitive tailorings such as those provided by the Common Locale Data Repository (available at <a href="http://cldr.unicode.org">http://cldr.unicode.org</a>).</emu-note>
       <emu-alg>
-        1. Let _segmenter_ be _iterator_.[[SegmentIteratorSegmenter]].
+        1. Let _segmenter_ be _iterator_.[[BoundaryIteratorSegmenter]].
         1. Let _locale_ be _segmenter_.[[Locale]].
         1. Let _granularity_ be _segmenter_.[[SegmenterGranularity]].
-        1. Let _string_ be _iterator_.[[SegmentIteratorString]].
-        1. Let _lastIndex_ be _iterator_.[[SegmentIteratorIndex]].
+        1. Let _string_ be _iterator_.[[BoundaryIteratorString]].
+        1. Let _lastIndex_ be _iterator_.[[BoundaryIteratorIndex]].
         1. If _direction_ is ~forwards~, then
           1. Let _len_ be the length of _string_.
           1. If _lastIndex_ is _len_, return *true*.
@@ -261,15 +261,15 @@ emu-issue:before {
           1. If _lastIndex_ is *0*, return *true*.
           1. Using locale _locale_ and granularity _granularity_, find the last boundary in _string_ that precedes the code unit at index _lastIndex_ - 1.
           1. If no boundary was found, let _nextIndex_ be 0. Otherwise, let _nextIndex_ be the integer index in _string_ that immediately follows the boundary.
-        1. Set _iterator_.[[SegmentIteratorIndex]] to _nextIndex_.
+        1. Set _iterator_.[[BoundaryIteratorIndex]] to _nextIndex_.
         1. If _nextIndex_ = 0, then
-          1. Set _iterator_.[[SegmentIteratorPrecedingSegmentType]] to *undefined*.
+          1. Set _iterator_.[[BoundaryIteratorPrecedingSegmentType]] to *undefined*.
         1. Else
           1. Assert: _granularity_ is listed in the &ldquo;Granularity&rdquo; column of <emu-xref href="#segment-type-table"></emu-xref>.
           1. Using locale _locale_ and granularity _granularity_, find the last boundary in _string_ that precedes the code unit at index _nextIndex_ - 1.
           1. If no boundary was found, let _segmentStart_ be 0. Otherwise, let _segmentStart_ be the integer index in _string_ that immediately follows the boundary.
           1. Let _precedingSegment_ be the String value containing consecutive code units from _string_ beginning with the code unit at index _segmentStart_ and ending with the code unit at index _nextIndex_ - 1.
-          1. Set _iterator_.[[SegmentIteratorPrecedingSegmentType]] to the value from the &ldquo;Segment Type&rdquo; column of the row in <emu-xref href="#segment-type-table"></emu-xref> in which the &ldquo;Granularity&rdquo; column matches _granularity_ and the &ldquo;Meaning&rdquo; column describes _precedingSegment_ according to the locale _locale_.
+          1. Set _iterator_.[[BoundaryIteratorPrecedingSegmentType]] to the value from the &ldquo;Segment Type&rdquo; column of the row in <emu-xref href="#segment-type-table"></emu-xref> in which the &ldquo;Granularity&rdquo; column matches _granularity_ and the &ldquo;Meaning&rdquo; column describes _precedingSegment_ according to the locale _locale_.
         1. Return *false*.
       </emu-alg>
       <emu-table id="segment-type-table" caption="Segment Types">
@@ -308,26 +308,26 @@ emu-issue:before {
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-segment-iterator-prototype">
-      <h1>%SegmentIteratorPrototype%</h1>
-      The %SegmentIteratorPrototype% object:
+    <emu-clause id="sec-boundary-iterator-prototype">
+      <h1>%BoundaryIteratorPrototype%</h1>
+      The %BoundaryIteratorPrototype% object:
       <ul>
-        <li>is the prototype of all segment iterators.</li>
+        <li>is the prototype of all boundary iterators.</li>
         <li>is an ordinary object.</li>
         <li>has a [[Prototype]] internal slot whose value is the intrinsic object %IteratorPrototype%.</li>
         <li>has the following properties:
       </ul>
-      <emu-clause id="sec-segment-iterator-prototype-next">
-        <h1>%SegmentIteratorPrototype%.next( )</h1>
+      <emu-clause id="sec-boundary-iterator-prototype-next">
+        <h1>%BoundaryIteratorPrototype%.next( )</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
-          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. Let _previousIndex_ be _iterator_.[[SegmentIteratorIndex]].
-          1. Let _done_ be AdvanceSegmentIterator(_iterator_, ~forwards~).
+          1. If _iterator_ does not have a [[BoundaryIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. Let _previousIndex_ be _iterator_.[[BoundaryIteratorIndex]].
+          1. Let _done_ be AdvanceBoundaryIterator(_iterator_, ~forwards~).
           1. If _done_ is *true*, return CreateIterResultObject(*undefined*, *true*).
-          1. Let _newIndex_ be _iterator_.[[SegmentIteratorIndex]].
-          1. Let _string_ be _iterator_.[[SegmentIteratorString]].
-          1. Let _precedingSegmentType_ be _iterator_.[[SegmentIteratorPrecedingSegmentType]].
+          1. Let _newIndex_ be _iterator_.[[BoundaryIteratorIndex]].
+          1. Let _string_ be _iterator_.[[BoundaryIteratorString]].
+          1. Let _precedingSegmentType_ be _iterator_.[[BoundaryIteratorPrecedingSegmentType]].
           1. Let _result_ be ! ObjectCreate(%ObjectPrototype%).
           1. Perform ! CreateDataProperty(_result_, `"precedingSegmentType"`, _precedingSegmentType_).
           1. Perform ! CreateDataProperty(_result_, `"index"`, _newIndex_).
@@ -335,55 +335,55 @@ emu-issue:before {
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-segment-iterator-prototype-following">
-        <h1>%SegmentIteratorPrototype%.following( [ _from_ ] )</h1>
+      <emu-clause id="sec-boundary-iterator-prototype-following">
+        <h1>%BoundaryIteratorPrototype%.following( [ _from_ ] )</h1>
         <p>The `following` method moves the iterator index to the boundary following the code unit index _from_ (or after the current index of the iterator if _from_ is *undefined*) and returns a Boolean value that is *true* if and only if the end of the string was reached. It performs the following steps:</p>
         <emu-alg>
           1. Let _iterator_ be *this* value.
-          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. Let _length_ be the length of _iterator_.[[SegmentIteratorString]].
+          1. If _iterator_ does not have a [[BoundaryIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. Let _length_ be the length of _iterator_.[[BoundaryIteratorString]].
           1. If _from_ is not *undefined*, then
             1. Let _from_ be ? ToIndex(_from_).
             1. If _from_ &lt; 0 or _from_ &ge; _length_, throw a *RangeError* exception.
-            1. Let _iterator_.[[SegmentIteratorIndex]] be _from_.
-          1. Perform ! AdvanceSegmentIterator(_iterator_, ~forwards~).
-          1. If _iterator_.[[SegmentIteratorIndex]] = _length_, return *true*.
+            1. Let _iterator_.[[BoundaryIteratorIndex]] be _from_.
+          1. Perform ! AdvanceBoundaryIterator(_iterator_, ~forwards~).
+          1. If _iterator_.[[BoundaryIteratorIndex]] = _length_, return *true*.
           1. Return *false*.
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-segment-iterator-prototype-preceding">
-        <h1>%SegmentIteratorPrototype%.preceding( [ _from_ ] )</h1>
+      <emu-clause id="sec-boundary-iterator-prototype-preceding">
+        <h1>%BoundaryIteratorPrototype%.preceding( [ _from_ ] )</h1>
         <p>The `preceding` method moves the iterator index to the boundary preceding the position before the code unit index _from_ (or before the current index of the iterator if _from_ is *undefined*) and returns a Boolean value that is *true* if and only if the beginning of the string was reached. It performs the following steps:</p>
         <emu-alg>
           1. Let _iterator_ be *this* value.
-          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. If _iterator_ does not have a [[BoundaryIteratorSegmenter]] internal slot, throw a *TypeError* exception.
           1. If _from_ is not *undefined*, then
             1. Let _from_ be ? ToIndex(_from_).
-            1. Let _length_ be the length of _iterator_.[[SegmentIteratorString]].
+            1. Let _length_ be the length of _iterator_.[[BoundaryIteratorString]].
             1. If _from_ = 0 or _from_ &gt; _length_, throw a *RangeError* exception.
-            1. Let _iterator_.[[SegmentIteratorIndex]] be _from_.
-          1. Perform ! AdvanceSegmentIterator(_iterator_, ~backwards~).
-          1. If _iterator_.[[SegmentIteratorIndex]] = 0, return *true*.
+            1. Let _iterator_.[[BoundaryIteratorIndex]] be _from_.
+          1. Perform ! AdvanceBoundaryIterator(_iterator_, ~backwards~).
+          1. If _iterator_.[[BoundaryIteratorIndex]] = 0, return *true*.
           1. Return *false*.
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-segment-iterator-prototype-index">
-        <h1>get %SegmentIteratorPrototype%.index</h1>
+      <emu-clause id="sec-boundary-iterator-prototype-index">
+        <h1>get %BoundaryIteratorPrototype%.index</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
-          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. Return _iterator_.[[SegmentIteratorIndex]].
+          1. If _iterator_ does not have a [[BoundaryIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. Return _iterator_.[[BoundaryIteratorIndex]].
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-segment-iterator-prototype-precedingSegmentType">
-        <h1>get %SegmentIteratorPrototype%.precedingSegmentType</h1>
+      <emu-clause id="sec-boundary-iterator-prototype-precedingSegmentType">
+        <h1>get %BoundaryIteratorPrototype%.precedingSegmentType</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
-          1. If _iterator_ does not have a [[SegmentIteratorSegmenter]] internal slot, throw a *TypeError* exception.
-          1. Return _iterator_.[[SegmentIteratorPrecedingSegmentType]].
+          1. If _iterator_ does not have a [[BoundaryIteratorSegmenter]] internal slot, throw a *TypeError* exception.
+          1. Return _iterator_.[[BoundaryIteratorPrecedingSegmentType]].
         </emu-alg>
       </emu-clause>
     </emu-clause>
