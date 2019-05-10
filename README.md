@@ -133,6 +133,10 @@ Move the iterator index to the boundary following the code unit index _from_ (or
 
 Move the iterator index to the boundary preceding the position before the code unit index _from_ (or before its current index if _from_ is not provided). Returns *true* if the beginning of the string was reached.
 
+#### `get %BoundaryIterator%.prototype.atEnd`
+
+Return true if the current iterator location is at the end of the string, otherwise return false.
+
 #### `get %BoundaryIterator%.prototype.index`
 
 Return the current boundary position as a count of code units in string that precede it. The initial value is 0, corresponding to a boundary at the start of the string.
