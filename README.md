@@ -60,38 +60,36 @@ let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
 let boundaries = segmenter.segment(input);
 let done = false;
 
-boundaries.index                // → 0
-boundaries.precedingSegmentType // → undefined
+boundaries.index                     // → 0
+boundaries.precedingSegmentType      // → undefined
 
-done = boundaries.following()   // → false
-boundaries.index                // → 6
-boundaries.precedingSegmentType // → "word" (describing "Allons")
+done = boundaries.following().atEnd  // → false
+boundaries.index                     // → 6
+boundaries.precedingSegmentType      // → "word" (describing "Allons")
 
-done = boundaries.following(5)  // → false
-boundaries.index                // → 6
-boundaries.precedingSegmentType // → "word" (describing "Allons")
+done = boundaries.following(5).atEnd // → false
+boundaries.index                     // → 6
+boundaries.precedingSegmentType      // → "word" (describing "Allons")
 
-done = boundaries.following()   // → false
-boundaries.index                // → 7
-boundaries.precedingSegmentType // → "none" (describing "-")
+done = boundaries.following().atEnd  // → false
+boundaries.index                     // → 7
+boundaries.precedingSegmentType      // → "none" (describing "-")
 
-done = boundaries.following(8)  // → true
-boundaries.index                // → 9
-boundaries.precedingSegmentType // → "none" (describing "!")
+done = boundaries.following(8).atEnd // → true
+boundaries.index                     // → 9
+boundaries.precedingSegmentType      // → "none" (describing "!")
 
-done = boundaries.following()   // → RangeError
-boundaries.index                // → 9
+done = boundaries.following().atEnd  // → RangeError
+boundaries.index                     // → 9
 
-done = boundaries.preceding()   // → false
-boundaries.index                // → 8
-boundaries.precedingSegmentType // → "word" (describing "y")
+boundaries.preceding().index         // → 8
+boundaries.precedingSegmentType      // → "word" (describing "y")
 
-done = boundaries.preceding(3)  // → false
-boundaries.index                // → 0
-boundaries.precedingSegmentType // → undefined
+boundaries.preceding(3).index        // → 0
+boundaries.precedingSegmentType      // → undefined
 
-done = boundaries.preceding()   // → RangeError
-boundaries.index                // → 0
+boundaries.preceding()               // → RangeError
+boundaries.index                     // → 0
 ```
 
 ## API
@@ -127,11 +125,11 @@ The `next` method implements the <i>Iterator</i> interface, finding the next bou
 
 #### `%BoundaryIterator%.prototype.following(from)`
 
-Move the iterator index to the boundary following the code unit index _from_ (or after its current index if _from_ is not provided). Returns *true* if the end of the string was reached.
+Move the iterator index to the boundary following the code unit index _from_ (or after its current index if _from_ is not provided). Returns the iterator.
 
 #### `%BoundaryIterator%.prototype.preceding(from)`
 
-Move the iterator index to the boundary preceding the position before the code unit index _from_ (or before its current index if _from_ is not provided). Returns *true* if the beginning of the string was reached.
+Move the iterator index to the boundary preceding the position before the code unit index _from_ (or before its current index if _from_ is not provided). Returns the iterator.
 
 #### `get %BoundaryIterator%.prototype.atEnd`
 
