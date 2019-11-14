@@ -104,25 +104,39 @@ segments.index                // → 0
 
 ### `new Intl.Segmenter(locale, options)`
 
-Interpretation of options:
-
-- `granularity`, which may be `grapheme`, `word`, or `sentence`.
+Creates a new locale-dependent Segmenter.
+If `options` is provided, it is treated as an object and its `granularity` property specifies the segmenter granularity ("grapheme", "word", or "sentence", defaulting to "grapheme").
 
 ### `Intl.Segmenter.prototype.segment(string)`
 
-This method creates a new `%SegmentIterator%` over the input string, which will lazily find segments, starting at index 0.
+Creates a new `%SegmentIterator%` instance which will lazily find segments in the input string using the Segmenter locale and granularity, keeping track of its position within the string.
 
-### `%SegmentIterator%`
-
-This class iterates over segments of a particular string.
+### `%SegmentIterator%.prototype`
 
 #### Iteration result data
 
-* `index` is the code point index at which the segment begins.
-* `segment` contains the current segment.
-* `isWordLike` is `true` for "word-like" segments (consisting of letters/numbers/ideographs/etc.) and `false` for other segments (spaces/punctuation/etc.).
+The `value` property of an <i>IteratorResult</i> object produced by a `%SegmentIterator%` instance is an object with the following data properties:
+* `index` is the code point index in the string at which the segment begins.
+* `segment` is the string segment.
+* `isWordLike` is `true` when granularity is "word" and the segment is _word-like_ (consisting of letters/numbers/ideographs/etc.), `false` when granularity is "word" and the segment is not _word-like_ (consisting of spaces/punctuation/etc.), and `undefined` when granularity is not "word".
 
-### Properties on %SegmentIterator%:
+### Methods of %SegmentIterator%.prototype:
+
+#### `%SegmentIterator%.prototype.next()`
+
+The `next` method implements the <i>Iterator</i> interface, finding the next segment and returning a corresponding <i>IteratorResult</i> object as described above.
+
+#### `%SegmentIterator%.prototype.following(from = this.index)`
+
+Moves the iterator to the earliest segment in the string starting after the code unit index _from_ (defaulting to the current index when not provided).
+Returns *true* if the end of the string was reached.
+
+#### `%SegmentIterator%.prototype.preceding(from = this.index)`
+
+Moves the iterator to the latest segment in the string starting before the code unit index _from_ - 1 (`from` defaults to the current index when not provided).
+Returns *true* if the beginning of the string was reached.
+
+### Properties of %SegmentIterator%.prototype:
 
 #### `get %SegmentIterator%.prototype.index`
 
@@ -131,30 +145,13 @@ The initial value is `null`, which is functionally the same as `-1` (i.e., a pos
 
 #### `get %SegmentIterator%.prototype.segment`
 
-Returns the current segment.
+Returns the current string segment.
 The initial value is `null`.
 
 #### `get %SegmentIterator%.prototype.isWordLike`
 
-If the granularity is "word", returns `true` when the current segment is "word-like" (e.g., consisting of letters/numbers/ideographs/etc.) and `false` when it is not (e.g., consisting of spaces/punctuation/etc.).
-If the granularity is not "word", returns `undefined`.
+Returns `true` when granularity is "word" and the current segment is _word-like_ (consisting of letters/numbers/ideographs/etc.), `false` when granularity is "word" and the segment is not _word-like_ (consisting of spaces/punctuation/etc.), and `undefined` when granularity is not "word".
 The initial value for granularity "word" is `null`.
-
-### Methods on %SegmentIterator%:
-
-#### `%SegmentIterator%.prototype.next()`
-
-The `next` method implements the <i>Iterator</i> interface, finding the next segment and returning an `IteratorResult` object relating to it as described above.
-
-#### `%SegmentIterator%.prototype.following(from = this.index)`
-
-Move the iterator to the segment following the code unit index _from_ (or following its current index if _from_ is not provided).
-Returns *true* if the end of the string was reached.
-
-#### `%SegmentIterator%.prototype.preceding(from)`
-
-Move the iterator to the segment preceding the code unit index _from_ (or preceding its current index if _from_ is not provided).
-Returns *true* if the beginning of the string was reached.
 
 ## FAQ
 
@@ -183,8 +180,8 @@ Q: Why is this API stateful?
 It would be possible to make a stateless API without a SegmentIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next boundary before or after. This method would return an object similar to what `next()` returns in this API. However, there are a few downsides to this approach:
 - Performance:
   - Often, JavaScript implementations need to take an extra step to convert an input string into a form that's usable for the external internationalization library. When querying several positions on a single string, it is nice to reuse the new form of the string; it would be difficult to cache this and invalidate the cache when appropriate.
-  - The `{precedingSegmentType, index}` object may be a difficult allocation to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
-- Convenience: Many (most?) usages of this API want to iterate through a string, either forwards or backwards, and get all of the appropriate boundaries, possibly interspersed with doing related work. A stateful API may be more terse for this sort of use case--no need to keep track of the previous position and feed it back in.
+  - Allocation of the <i>IteratorResult</i> objects may be difficult to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
+- Convenience: Many (most?) usages of this API want to iterate through a string, either forwards or backwards, and get all of the appropriate segments, possibly interspersed with doing related work. A stateful API may be more terse for this sort of use case—no need to keep track of the previous position and feed it back in.
 
 It is easy to create a stateless API based on this stateful one, or vice versa, in user JavaScript code.
 
@@ -194,4 +191,6 @@ A: All of these boundary types are actually locale-dependent, and some allow com
 
 Q: What exactly does the index refer to?
 
-An index *n* refers to the boundary preceding the code unit *n*. For example, when iterating over the string "Hello, world💙" by words in English, there will be boundaries at 0, 5, 6, 7, 12, and 14. he definition of these boundary indices does not depend on whether forwards or backwards iteration is used.
+An index *n* refers to the boundary preceding the code unit *n*.
+For example, when iterating over the string "Hello, world💙" by words in English, there will be boundaries at 0, 5, 6, 7, 12, and 14 (i.e., the string segments like `┃Hello┃,┃ ┃world┃💙┃`, with the final segment consisting of a surrogate pair of two code units encoding a single code point).
+The definition of these boundary indices does not depend on whether forwards or backwards iteration is used.
