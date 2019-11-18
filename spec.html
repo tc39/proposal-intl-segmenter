@@ -5,10 +5,12 @@ title: Intl.Segmenter Proposal
 status: proposal
 stage: 3
 location: https://github.com/tc39/proposal-intl-segmenter
+shortname: &lt;a href="https://github.com/tc39/proposal-intl-segmenter"&gt;proposal-intl-segmenter&lt;/a&gt;
 copyright: false
-contributors: Richard Gibson
-contributors: Daniel Ehrenberg
+contributors: Richard Gibson, Daniel Ehrenberg
 </pre>
+<emu-biblio href="./biblio.json"></emu-biblio>
+
 <style>
 emu-issue {
     margin: 1em 0;
@@ -33,7 +35,8 @@ emu-issue:before {
     content: "ISSUE";
 }
 </style>
-<emu-biblio href="./biblio.json"></emu-biblio>
+
+
 <emu-clause id="segmenter-objects">
   <h1>Segmenter Objects</h1>
 
@@ -41,18 +44,20 @@ emu-issue:before {
     <h1>The Intl.Segmenter Constructor</h1>
 
     <p>
-      The Segmenter constructor is a standard built-in property of the Intl object.</p>
+      The Segmenter constructor is the <dfn>%Segmenter%</dfn> intrinsic object and a standard built-in property of the Intl object. Behaviour common to all service constructor properties of the Intl object is specified in <emu-xref href="#sec-internal-slots"></emu-xref>.
+    </p>
 
     <emu-clause id="sec-Intl.Segmenter">
       <h1>Intl.Segmenter ([ _locales_ [ , _options_ ]])</h1>
 
       <p>
-        When the `Intl.Segmenter` function is called with optional arguments the following steps are taken:
+        When the `Intl.Segmenter` function is called with optional arguments _locales_ and _options_, the following steps are taken:
       </p>
 
       <emu-alg>
         1. If NewTarget is *undefined*, throw a *TypeError* exception.
-        1. Let _segmenter_ be ? OrdinaryCreateFromConstructor(NewTarget, `"%SegmenterPrototype%"`, « [[InitializedSegmenter]] »).
+        1. Let _internalSlotsList_ be &laquo; [[InitializedSegmenter]], [[Locale]], [[SegmenterGranularity]] &raquo;.
+        1. Let _segmenter_ be ? OrdinaryCreateFromConstructor(NewTarget, `"%SegmenterPrototype%"`, _internalSlotsList_).
         1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
         1. If _options_ is *undefined*, then
           1. Let _options_ be ObjectCreate(*null*).
@@ -63,8 +68,8 @@ emu-issue:before {
         1. Set _opt_.[[localeMatcher]] to _matcher_.
         1. Let _localeData_ be %Segmenter%.[[LocaleData]].
         1. Let _r_ be ResolveLocale(%Segmenter%.[[AvailableLocales]], _requestedLocales_, _opt_, %Segmenter%.[[RelevantExtensionKeys]], _localeData_).
-        1. Set _segmenter_.[[Locale]] to the value of _r_.[[Locale]].
-        1. Let _granularity_ be ? GetOption(_options_, `"granularity"`, `"string"`, « `"grapheme"`, `"word"`, `"sentence"` », `"grapheme"`).
+        1. Set _segmenter_.[[Locale]] to the value of _r_.[[locale]].
+        1. Let _granularity_ be ? GetOption(_options_, `"granularity"`, `"string"`, &laquo; `"grapheme"`, `"word"`, `"sentence"` &raquo;, `"grapheme"`).
         1. Set _segmenter_.[[SegmenterGranularity]] to _granularity_.
         1. Return _segmenter_.
       </emu-alg>
@@ -82,7 +87,7 @@ emu-issue:before {
       <h1>Intl.Segmenter.prototype</h1>
 
       <p>
-        The value of *Intl.Segmenter.prototype* is *%SegmenterPrototype%*.
+        The value of `Intl.Segmenter.prototype` is %SegmenterPrototype%.
       </p>
       <p>
         This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.
@@ -93,22 +98,25 @@ emu-issue:before {
       <h1>Intl.Segmenter.supportedLocalesOf ( _locales_ [, _options_ ])</h1>
 
       <p>
-        When the *supportedLocalesOf* method of *%Segmenter%* is called, the following steps are taken:
+        When the `supportedLocalesOf` method is called with arguments _locales_ and _options_, the following steps are taken:
       </p>
 
       <emu-alg>
-        1. Let _availableLocales_ be *%Segmenter%*.[[AvailableLocales]].
+        1. Let _availableLocales_ be %Segmenter%.[[AvailableLocales]].
         1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
         1. Return ? SupportedLocales(_availableLocales_, _requestedLocales_, _options_).
       </emu-alg>
 
+      <p>
+        The value of the `length` property of the *supportedLocalesOf* method is 1.
+      </p>
     </emu-clause>
 
     <emu-clause id="sec-Intl.Segmenter-internal-slots">
       <h1>Internal slots</h1>
 
       <p>
-        The value of the [[AvailableLocales]] internal slot is implementation defined within the constraints described in <emu-xref href="#sec-segmenter-internal-slots"></emu-xref>.
+        The value of the [[AvailableLocales]] internal slot is implementation defined within the constraints described in <emu-xref href="#sec-internal-slots"></emu-xref>.
       </p>
         
       <p>
@@ -116,7 +124,7 @@ emu-issue:before {
       </p>
         
       <p>
-        The value of the [[RelevantExtensionKeys]] internal slot is &laquo;  &raquo;.
+        The value of the [[RelevantExtensionKeys]] internal slot is &laquo; &raquo;.
       </p>
 
       <emu-note>
@@ -130,14 +138,14 @@ emu-issue:before {
     <h1>Properties of the Intl.Segmenter Prototype Object</h1>
 
     <p>
-      The Intl.Segmenter prototype object, referred to as *%SegmenterPrototype%*, is itself an ordinary object. It is not a Segmenter instance, and has no instance-like internal slots.
+      The Intl.Segmenter prototype object is itself an ordinary object. <dfn>%SegmenterPrototype%</dfn> is not an Intl.Segmenter instance and does not have an [[InitializedSegmenter]] internal slot or any of the other internal slots of Intl.Segmenter instance objects.
     </p>
 
     <emu-clause id="sec-Intl.Segmenter.prototype.constructor">
       <h1>Intl.Segmenter.prototype.constructor</h1>
 
       <p>
-        The initial value of `Intl.Segmenter.prototype.constructor` is *%Segmenter%*.
+        The initial value of `Intl.Segmenter.prototype.constructor` is the intrinsic object %Segmenter%.
       </p>
     </emu-clause>
 
@@ -145,7 +153,7 @@ emu-issue:before {
       <h1>Intl.Segmenter.prototype[ @@toStringTag ]</h1>
 
       <p>
-        The initial value of the @@toStringTag property is the string value `"Intl.Segmenter"`.
+        The initial value of the @@toStringTag property is the string value `"Object"`.
       </p>
       <p>
         This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
@@ -175,12 +183,13 @@ emu-issue:before {
       </p>
 
       <emu-alg>
-        1. Let _pr_ be the *this* value.
-        1. If Type(_pr_) is not Object or _pr_ does not have an [[InitializedSegmenter]] internal slot, throw a *TypeError* exception.
+        1. Let _segmenter_ be the *this* value.
+        1. If Type(_segmenter_) is not Object, throw a *TypeError* exception.
+        1. If _segmenter_ does not have an [[InitializedSegmenter]] internal slot, throw a *TypeError* exception.
         1. Let _options_ be ! ObjectCreate(%ObjectPrototype%).
         1. For each row of <emu-xref href="#table-segmenter-resolvedoptions-properties"></emu-xref>, except the header row, in table order, do
           1. Let _p_ be the Property value of the current row.
-          1. Let _v_ be the value of _pr_'s internal slot whose name is the Internal Slot value of the current row.
+          1. Let _v_ be the value of _segmenter_'s internal slot whose name is the Internal Slot value of the current row.
           1. If _v_ is not *undefined*, then
             1. Perform ! CreateDataPropertyOrThrow(_options_, _p_, _v_).
         1. Return _options_.
@@ -208,16 +217,24 @@ emu-issue:before {
     </emu-clause>
   </emu-clause>
 
-  <emu-clause id="sec-segmenter-internal-slots">
-    <h1>Internal slots of Intl.Segmenter Instances</h1>
+  <emu-clause id="sec-properties-of-intl-segmenter-instances">
+    <h1>Properties of Intl.Segmenter Instances</h1>
 
     <p>
-      Objects that have been successfully initialized as a Segmenter object also have several internal slots that are computed by the constructor:
+      Intl.Segmenter instances inherit properties from %SegmenterPrototype%.
+    </p>
+
+    <p>
+      Intl.Segmenter instances have an [[InitializedSegmenter]] internal slot.
+    </p>
+
+    <p>
+      Intl.Segmenter instances also have several internal slots that are computed by the constructor:
     </p>
 
     <ul>
-      <li>[[Locale]] is a String value with the language tag of the locale whose localization is used by the segmenter.</li>
-      <li>[[SegmenterGranularity]] is one of the String values `"grapheme"`, `"word"`, or `"sentence"`, identifying the segmenter used.</li>
+      <li>[[Locale]] is a String value with the language tag of the locale whose localization is used for segmentation.</li>
+      <li>[[SegmenterGranularity]] is one of the String values `"grapheme"`, `"word"`, or `"sentence"`, identifying the kind of text element to segment.</li>
     </ul>
 
   </emu-clause>
@@ -236,7 +253,7 @@ emu-issue:before {
         1. Let _iterator_ be ObjectCreate(%BoundaryIteratorPrototype%).
         1. Let _iterator_.[[BoundaryIteratorSegmenter]] be _segmenter_.
         1. Let _iterator_.[[BoundaryIteratorString]] be _string_.
-        1. Let _iterator_.[[BoundaryIteratorIndex]] be *0*.
+        1. Let _iterator_.[[BoundaryIteratorIndex]] be 0.
         1. Let _iterator_.[[BoundaryIteratorPrecedingSegmentType]] be *undefined*.
       </emu-alg>
     </emu-clause>
@@ -259,7 +276,7 @@ emu-issue:before {
           1. If the boundary is at the end of _string_, let _nextIndex_ be _len_. Otherwise, let _nextIndex_ be the integer index in _string_ that immediately follows the boundary.
         1. Else
           1. Assert: _direction_ is ~backwards~.
-          1. If _lastIndex_ is *0*, return *true*.
+          1. If _lastIndex_ is 0, return *true*.
           1. Using locale _locale_ and granularity _granularity_, find the last boundary in _string_ that precedes the code unit at index _lastIndex_ - 1.
           1. If no boundary was found, let _nextIndex_ be 0. Otherwise, let _nextIndex_ be the integer index in _string_ that immediately follows the boundary.
         1. Set _iterator_.[[BoundaryIteratorIndex]] to _nextIndex_.
@@ -298,12 +315,12 @@ emu-issue:before {
           <tr>
             <td>`"sentence"`</td>
             <td>`"term"`</td>
-            <td>a segment that ends with a sentence terminator ('.', '?', '!', etc.) optionally followed by any amount of closing punctuation ('"', ']', '»', etc.), any amount of whitespace, and then an optional hard separator (CR, LF, PS, etc.)</td>
+            <td>a segment that ends with a sentence terminator ('.', '?', '!', etc.) optionally followed by any amount of closing punctuation ('"', ']', '»', etc.), any amount of whitespace, and then an optional hard separator (&lt;CR&gt;, &lt;LF&gt;, &lt;PS&gt;, etc.)</td>
           </tr>
           <tr>
             <td>`"sentence"`</td>
             <td>`"sep"`</td>
-            <td>a segment that does not end with a sentence terminator ('.', '?', '!', etc.) section, but is either at the end of the string or ends with a hard separator (CR, LF, PS, etc.)</td>
+            <td>a segment that does not end with a sentence terminator ('.', '?', '!', etc.) section, but is either at the end of the string or ends with a hard separator (&lt;CR&gt;, &lt;LF&gt;, &lt;PS&gt;, etc.)</td>
           </tr>
         </table>
       </emu-table>
