@@ -150,7 +150,7 @@ emu-issue:before {
     </emu-clause>
 
     <emu-clause id="sec-intl.segmenter.prototype-@@tostringtag">
-      <h1>Intl.Segmenter.prototype[ @@toStringTag ]</h1>
+      <h1>Intl.Segmenter.prototype [ @@toStringTag ]</h1>
 
       <p>
         The initial value of the @@toStringTag property is the String value `"Object"`.
@@ -355,7 +355,7 @@ emu-issue:before {
 
       <emu-clause id="sec-%segmentiteratorprototype%.preceding">
         <h1>%SegmentIteratorPrototype%.preceding( [ _startBefore_ ] )</h1>
-        <p>The `preceding` method is called on a Segment Iterator instance with optional argument _startBefore_ to advance it backward to the first segment starting before that code unit index (when not *undefined*, otherwise before the starting index of the current segment) and return the iterator (or throw, if the start index was out of bounds). The following steps are taken:</p>
+        <p>The `preceding` method is called on a Segment Iterator instance with optional argument _startBefore_ to move it backward to the last segment starting before that code unit index (when not *undefined*, otherwise before the starting index of the current segment) and return the iterator (or throw, if the start index was out of bounds). The following steps are taken:</p>
         <emu-alg>
           1. Let _iterator_ be *this* value.
           1. Perform ? RequireInternalSlot(_iterator_, [[IteratingSegmenter]]).
@@ -370,8 +370,20 @@ emu-issue:before {
         </emu-alg>
       </emu-clause>
 
+      <emu-clause id="sec-%segmentiteratorprototype%.@@tostringtag">
+        <h1>%SegmentIteratorPrototype% [ @@toStringTag ]</h1>
+
+        <p>
+          The initial value of the @@toStringTag property is the String value `"Segmenter String Iterator"`.
+        </p>
+        <p>
+          This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *true* }.
+        </p>
+      </emu-clause>
+
       <emu-clause id="sec-%segmentiteratorprototype%.segment">
         <h1>get %SegmentIteratorPrototype%.segment</h1>
+        <p>`%SegmentIteratorPrototype%.segment` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps:</p>
         <emu-alg>
           1. Let _iterator_ be *this* value.
           1. Perform ? RequireInternalSlot(_iterator_, [[IteratingSegmenter]]).
@@ -381,6 +393,7 @@ emu-issue:before {
 
       <emu-clause id="sec-%segmentiteratorprototype%.index">
         <h1>get %SegmentIteratorPrototype%.index</h1>
+        <p>`%SegmentIteratorPrototype%.index` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps:</p>
         <emu-alg>
           1. Let _iterator_ be *this* value.
           1. Perform ? RequireInternalSlot(_iterator_, [[IteratingSegmenter]]).
@@ -390,6 +403,7 @@ emu-issue:before {
 
       <emu-clause id="sec-%segmentiteratorprototype%.isWordLike">
         <h1>get %SegmentIteratorPrototype%.isWordLike</h1>
+        <p>`%SegmentIteratorPrototype%.isWordLike` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps:</p>
         <emu-alg>
           1. Let _iterator_ be *this* value.
           1. Perform ? RequireInternalSlot(_iterator_, [[IteratingSegmenter]]).
