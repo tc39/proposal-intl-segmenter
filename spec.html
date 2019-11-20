@@ -164,14 +164,12 @@ emu-issue:before {
       <h1>Intl.Segmenter.prototype.segment( _string_ )</h1>
 
       <p>
-        When the *Intl.Segmenter.prototype.segment* is called with an argument _string_, the following steps are taken:
+        When the `Intl.Segmenter.prototype.segment` method is called with an argument _string_, the following steps are taken:
       </p>
 
       <emu-alg>
-        1. Let _segment_ be *this* value.
-        1. If Type(_segment_) is not Object or _segment_ does not have an [[InitializedSegmenter]] internal slot, throw a *TypeError* exception.
-        1. Let _string_ be ? ToString(_string_).
-        1. Return ? CreateBoundaryIterator(_segment_, _string_).
+        1. Let _segmenter_ be the *this* value.
+        1. Return ? CreateBoundaryIterator(_segmenter_, _string_).
       </emu-alg>
     </emu-clause>
 
@@ -184,8 +182,7 @@ emu-issue:before {
 
       <emu-alg>
         1. Let _segmenter_ be the *this* value.
-        1. If Type(_segmenter_) is not Object, throw a *TypeError* exception.
-        1. If _segmenter_ does not have an [[InitializedSegmenter]] internal slot, throw a *TypeError* exception.
+        1. Perform ? RequireInternalSlot(_segmenter_, [[InitializedSegmenter]]).
         1. Let _options_ be ! ObjectCreate(%ObjectPrototype%).
         1. For each row of <emu-xref href="#table-segmenter-resolvedoptions-properties"></emu-xref>, except the header row, in table order, do
           1. Let _p_ be the Property value of the current row.
@@ -240,7 +237,7 @@ emu-issue:before {
   </emu-clause>
 
   <emu-clause id="boundary-iterator-objects">
-    <h1>Boundary Iterators</h1>
+    <h1>Boundary Iterator Objects</h1>
 
     <p>
       The Intl.Segment.prototype.segment method returns iterators over the segments for a particular string. This section describes those iterator objects.
@@ -250,6 +247,8 @@ emu-issue:before {
       <h1>CreateBoundaryIterator ( _segmenter_, _string_ )</h1>
       <p>When the abstract operation CreateBoundaryIterator is called with Segmenter _segmenter_ and string _string_, the following steps are taken:</p>
       <emu-alg>
+        1. Perform ? RequireInternalSlot(_segmenter_, [[InitializedSegmenter]]).
+        1. Let _string_ be ? ToString(_string_).
         1. Let _iterator_ be ObjectCreate(%BoundaryIteratorPrototype%).
         1. Let _iterator_.[[BoundaryIteratorSegmenter]] be _segmenter_.
         1. Let _iterator_.[[BoundaryIteratorString]] be _string_.
