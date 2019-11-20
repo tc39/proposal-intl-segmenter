@@ -47,7 +47,7 @@ emu-issue:before {
       The Segmenter constructor is the <dfn>%Segmenter%</dfn> intrinsic object and a standard built-in property of the Intl object. Behaviour common to all service constructor properties of the Intl object is specified in <emu-xref href="#sec-internal-slots"></emu-xref>.
     </p>
 
-    <emu-clause id="sec-Intl.Segmenter">
+    <emu-clause id="sec-intl.segmenter">
       <h1>Intl.Segmenter ([ _locales_ [ , _options_ ]])</h1>
 
       <p>
@@ -83,7 +83,7 @@ emu-issue:before {
       The Intl.Segmenter constructor has the following properties:
     </p>
 
-    <emu-clause id="sec-Intl.Segmenter.prototype">
+    <emu-clause id="sec-intl.segmenter.prototype">
       <h1>Intl.Segmenter.prototype</h1>
 
       <p>
@@ -94,7 +94,7 @@ emu-issue:before {
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-Intl.Segmenter.supportedLocalesOf">
+    <emu-clause id="sec-intl.segmenter.supportedlocalesof">
       <h1>Intl.Segmenter.supportedLocalesOf ( _locales_ [, _options_ ])</h1>
 
       <p>
@@ -112,7 +112,7 @@ emu-issue:before {
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-Intl.Segmenter-internal-slots">
+    <emu-clause id="sec-intl.segmenter-internal-slots">
       <h1>Internal slots</h1>
 
       <p>
@@ -141,7 +141,7 @@ emu-issue:before {
       The Intl.Segmenter prototype object is itself an ordinary object. <dfn>%SegmenterPrototype%</dfn> is not an Intl.Segmenter instance and does not have an [[InitializedSegmenter]] internal slot or any of the other internal slots of Intl.Segmenter instance objects.
     </p>
 
-    <emu-clause id="sec-Intl.Segmenter.prototype.constructor">
+    <emu-clause id="sec-intl.segmenter.prototype.constructor">
       <h1>Intl.Segmenter.prototype.constructor</h1>
 
       <p>
@@ -149,7 +149,7 @@ emu-issue:before {
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-Intl.Segmenter.prototype-@@tostringtag">
+    <emu-clause id="sec-intl.segmenter.prototype-@@tostringtag">
       <h1>Intl.Segmenter.prototype[ @@toStringTag ]</h1>
 
       <p>
@@ -160,7 +160,7 @@ emu-issue:before {
       </p>
     </emu-clause>
 
-    <emu-clause id="sec-Intl.Segmenter.prototype.segment" aoid="Intl.Segmenter.prototype.segment">
+    <emu-clause id="sec-intl.segmenter.prototype.segment">
       <h1>Intl.Segmenter.prototype.segment( _string_ )</h1>
 
       <p>
@@ -173,7 +173,7 @@ emu-issue:before {
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-Intl.Segmenter.prototype.resolvedOptions">
+    <emu-clause id="sec-intl.segmenter.prototype.resolvedoptions">
       <h1>Intl.Segmenter.prototype.resolvedOptions ()</h1>
 
       <p>
@@ -236,14 +236,14 @@ emu-issue:before {
 
   </emu-clause>
 
-  <emu-clause id="boundary-iterator-objects">
+  <emu-clause id="sec-boundary-iterator-objects">
     <h1>Boundary Iterator Objects</h1>
 
     <p>
       The Intl.Segment.prototype.segment method returns iterators over the segments for a particular string. This section describes those iterator objects.
     </p>
 
-    <emu-clause id="sec-CreateBoundaryIterator" aoid="CreateBoundaryIterator">
+    <emu-clause id="sec-createboundaryiterator" aoid="CreateBoundaryterator">
       <h1>CreateBoundaryIterator ( _segmenter_, _string_ )</h1>
       <p>When the abstract operation CreateBoundaryIterator is called with Segmenter _segmenter_ and string _string_, the following steps are taken:</p>
       <emu-alg>
@@ -257,7 +257,7 @@ emu-issue:before {
       </emu-alg>
     </emu-clause>
 
-    <emu-clause id="sec-AdvanceBoundaryIterator" aoid="AdvanceBoundaryIterator">
+    <emu-clause id="sec-advanceboundaryiterator" aoid="AdvanceBoundaryIterator">
       <h1>AdvanceBoundaryIterator ( _iterator_, _direction_ )</h1>
       <p>The abstract operation AdvanceBoundaryIterator takes as arguments a boundary iterator _iterator_ and a ~forwards~ or ~backwards~ _direction_. The operation attempts to advance the iterator to the next boundary in the given direction according to the effective locale and options of the iterator's constructing segmenter, and returns a Boolean value that is *true* if and only if iteration in the given direction was already complete. It performs the following steps:</p>
       <emu-note>Boundary determination is implementation-dependent, but general default algorithms are specified in Unicode Standard Annex 29 (available at <a href="https://www.unicode.org/reports/tr29/">https://www.unicode.org/reports/tr29/</a>). It is recommended that implementations use locale-sensitive tailorings such as those provided by the Common Locale Data Repository (available at <a href="http://cldr.unicode.org">http://cldr.unicode.org</a>).</emu-note>
@@ -325,8 +325,8 @@ emu-issue:before {
       </emu-table>
     </emu-clause>
 
-    <emu-clause id="sec-boundary-iterator-prototype">
-      <h1>%BoundaryIteratorPrototype%</h1>
+    <emu-clause id="sec-%boundaryiteratorprototype%-object">
+      <h1>The %BoundaryIteratorPrototype% Object</h1>
       The %BoundaryIteratorPrototype% object:
       <ul>
         <li>is the prototype of all boundary iterators.</li>
@@ -334,7 +334,7 @@ emu-issue:before {
         <li>has a [[Prototype]] internal slot whose value is the intrinsic object %IteratorPrototype%.</li>
         <li>has the following properties:
       </ul>
-      <emu-clause id="sec-boundary-iterator-prototype-next">
+      <emu-clause id="sec-%boundaryiteratorprototype%.next">
         <h1>%BoundaryIteratorPrototype%.next( )</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
@@ -352,7 +352,7 @@ emu-issue:before {
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-boundary-iterator-prototype-following">
+      <emu-clause id="sec-%boundaryiteratorprototype%.following">
         <h1>%BoundaryIteratorPrototype%.following( [ _from_ ] )</h1>
         <p>The `following` method moves the iterator index to the boundary following the code unit index _from_ (or after the current index of the iterator if _from_ is *undefined*) and returns a Boolean value that is *true* if and only if the end of the string was reached. It performs the following steps:</p>
         <emu-alg>
@@ -369,7 +369,7 @@ emu-issue:before {
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-boundary-iterator-prototype-preceding">
+      <emu-clause id="sec-%boundaryiteratorprototype%.preceding">
         <h1>%BoundaryIteratorPrototype%.preceding( [ _from_ ] )</h1>
         <p>The `preceding` method moves the iterator index to the boundary preceding the position before the code unit index _from_ (or before the current index of the iterator if _from_ is *undefined*) and returns a Boolean value that is *true* if and only if the beginning of the string was reached. It performs the following steps:</p>
         <emu-alg>
@@ -386,7 +386,7 @@ emu-issue:before {
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-boundary-iterator-prototype-index">
+      <emu-clause id="sec-%boundaryiteratorprototype%.index">
         <h1>get %BoundaryIteratorPrototype%.index</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
@@ -395,7 +395,7 @@ emu-issue:before {
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-boundary-iterator-prototype-precedingSegmentType">
+      <emu-clause id="sec-%boundaryiteratorprototype%.precedingSegmentType">
         <h1>get %BoundaryIteratorPrototype%.precedingSegmentType</h1>
         <emu-alg>
           1. Let _iterator_ be *this* value.
