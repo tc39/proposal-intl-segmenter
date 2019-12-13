@@ -194,7 +194,7 @@ All of these boundary types are actually locale-dependent, and some allow comple
 ### What exactly does the index refer to?
 
 An index *n* refers to the code unit index within a string that is potentially the start of a segment.
-For example, when iterating over the string "Hello, world💙" by words in English,segments will start at indexes 0, 5, 6, 7, 12, and 14 (i.e., the string gets segmented like `┃Hello┃,┃ ┃world┃💙┃`, with the final segment consisting of a surrogate pair of two code units encoding a single code point).
+For example, when iterating over the string "Hello, world💙" by words in English,segments will start at indexes 0, 5, 6, 7, and 12 (i.e., the string gets segmented like `┃Hello┃,┃ ┃world┃💙┃`, with the final segment consisting of a surrogate pair of two code units encoding a single code point).
 The definition of these boundary indexes does not depend on whether forwards or backwards iteration is used.
 
 ### What happens when segmenting an empty string?
@@ -205,7 +205,7 @@ We essentially synthesize two positions at which there is no segment (not just f
 
 ### What happens when I try to use random access with non-Number values?
 
-Someone's in QA. 😉
+_Someone's_ in QA. 😉
 The random access methods treat `undefined` starting index the same as unspecified, and will start from the current index.
 All other inputs are processed into integer Numbers—`null` becomes 0, Booleans become 0 or 1, Strings are parsed as string numeric literals, Objects are cast to primitives, and Symbols, BigInts, and `NaN` fail. Fractional components are truncated, but infinite Numbers are accepted as-is.
 
