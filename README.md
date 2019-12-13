@@ -14,39 +14,36 @@ Chrome has been shipping its own nonstandard segmentation API called `Intl.v8Bre
 
 ## Examples
 
-### Boundary iteration
+### Segment iteration
 
-Objects returned by the `segment` method of an Intl.Segmenter instance expose segmentation boundaries via the <i>Iterable</i> interface.
+Objects returned by the `segment` method of an Intl.Segmenter instance find boundaries and expose segments between them via the [<i>Iterable</i> interface](https://tc39.es/ecma262/#sec-iterable-interface).
 
 ```js
 // Create a locale-specific word segmenter
 let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
 
-// Use it to get a boundary iterator for a string
+// Use it to get an iterator for a string
 let input = "Moi?  N'est-ce pas.";
-let boundaries = segmenter.segment(input);
+let segments = segmenter.segment(input);
 
 // Use that for segmentation!
-let lastIndex = 0;
-for (let {index, precedingSegmentType} of boundaries) {
-  let segment = input.slice(lastIndex, index);
-  console.log("segment at [%d, %d) of type %o: «%s»",
-    lastIndex, index,
-    precedingSegmentType,
-    input.slice(lastIndex, index)
+for (let {segment, index, isWordLike} of segments) {
+  console.log("segment at code units [%d, %d): «%s»%s",
+    index, index + segment.length,
+    segment,
+    isWordLike ? " (word-like)" : ""
   );
-  lastIndex = index;
 }
 // console.log output:
-// segment at [0, 3) of type "word": «Moi»
-// segment at [3, 4) of type "none": «?»
-// segment at [4, 6) of type "none": «  »
-// segment at [6, 11) of type "word": «N'est»
-// segment at [11, 12) of type "none": «-»
-// segment at [12, 14) of type "word": «ce»
-// segment at [14, 15) of type "none": « »
-// segment at [15, 18) of type "word": «pas»
-// segment at [18, 19) of type "none": «.»
+// segment at code units [0, 3): «Moi» (word-like)
+// segment at code units [3, 4): «?»
+// segment at code units [4, 6): «  »
+// segment at code units [6, 11): «N'est» (word-like)
+// segment at code units [11, 12): «-»
+// segment at code units [12, 14): «ce» (word-like)
+// segment at code units [14, 15): « »
+// segment at code units [15, 18): «pas» (word-like)
+// segment at code units [18, 19): «.»
 ```
 
 For performance and flexibility, they also support direct random access.
@@ -57,41 +54,50 @@ For performance and flexibility, they also support direct random access.
 let input = "Allons-y!";
 
 let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
-let boundaries = segmenter.segment(input);
+let segments = segmenter.segment(input);
 let done = false;
 
-boundaries.index                // → 0
-boundaries.precedingSegmentType // → undefined
+segments.index                   // → -1
+segments.segment                 // → null
+segments.isWordLike              // → null
 
-done = boundaries.following()   // → false
-boundaries.index                // → 6
-boundaries.precedingSegmentType // → "word" (describing "Allons")
+segments.following()             // → [object Segmenter String Iterator]
+segments.index                   // → 0
+segments.segment                 // → "Allons"
+segments.isWordLike              // → true
 
-done = boundaries.following(5)  // → false
-boundaries.index                // → 6
-boundaries.precedingSegmentType // → "word" (describing "Allons")
+segments.following(4)            // → [object Segmenter String Iterator]
+segments.index                   // → 6
+segments.segment                 // → "-"
+segments.isWordLike              // → false
 
-done = boundaries.following()   // → false
-boundaries.index                // → 7
-boundaries.precedingSegmentType // → "none" (describing "-")
+segments.following()             // → [object Segmenter String Iterator]
+segments.index                   // → 7
+segments.segment                 // → "y"
+segments.isWordLike              // → true
 
-done = boundaries.following(8)  // → true
-boundaries.index                // → 9
-boundaries.precedingSegmentType // → "none" (describing "!")
+segments.following().following() // → [object Segmenter String Iterator]
+segments.index                   // → 9
+segments.segment                 // → null
+segments.isWordLike              // → null
 
-done = boundaries.following()   // → RangeError
-boundaries.index                // → 9
+segments.following()             // → RangeError
+segments.index                   // → 9
 
-done = boundaries.preceding()   // → false
-boundaries.index                // → 8
-boundaries.precedingSegmentType // → "word" (describing "y")
+segments.preceding()             // → [object Segmenter String Iterator]
+segments.index                   // → 8
+segments.segment                 // → "!"
+segments.isWordLike              // → false
 
-done = boundaries.preceding(3)  // → false
-boundaries.index                // → 0
-boundaries.precedingSegmentType // → undefined
+segments.preceding(3)            // → [object Segmenter String Iterator]
+segments.index                   // → 0
+segments.segment                 // → "Allons"
+segments.isWordLike              // → true
 
-done = boundaries.preceding()   // → RangeError
-boundaries.index                // → 0
+segments.preceding()             // → [object Segmenter String Iterator]
+segments.index                   // → -1
+segments.segment                 // → null
+segments.isWordLike              // → null
 ```
 
 ## API
@@ -100,83 +106,109 @@ boundaries.index                // → 0
 
 ### `new Intl.Segmenter(locale, options)`
 
-Interpretation of options:
-
-- `granularity`, which may be `grapheme`, `word`, or `sentence`.
+Creates a new locale-dependent Segmenter.
+If `options` is provided, it is treated as an object and its `granularity` property specifies the segmenter granularity ("grapheme", "word", or "sentence", defaulting to "grapheme").
 
 ### `Intl.Segmenter.prototype.segment(string)`
 
-This method creates a new `%BoundaryIterator%` over the input string, which will lazily find segment boundaries, starting at index 0.
+Creates a new `%SegmentIterator%` instance which will lazily find segments in the input string using the Segmenter's locale and granularity, keeping track of its current position within the string.
 
-### `%BoundaryIterator%`
-
-This class iterates over segment boundaries of a particular string.
+### `%SegmentIterator%.prototype`
 
 #### Iteration result data
 
-* `index` is the code point index immediately following the last found boundary.
-* `precedingSegmentType` characterizes the segment preceding the last found boundary. Some particularly important values are:
-  * With `word` granularity, "word" for letter/number/ideograph segments vs. "none" for spaces/punctuation/etc.
-  * With `sentence` granularity, "term" for segments with terminating punctuation vs. "sep" for those without it.
+The `value` property of an <i>IteratorResult</i> object produced by a `%SegmentIterator%` instance is an object with the following data properties:
+* `segment` is the string segment.
+* `index` is the code unit index in the string at which the segment begins.
+* `isWordLike` is `true` when granularity is "word" and the segment is _word-like_ (consisting of letters/numbers/ideographs/etc.), `false` when granularity is "word" and the segment is not _word-like_ (consisting of spaces/punctuation/etc.), and `undefined` when granularity is not "word".
 
-### Methods on %BoundaryIterator%:
+### Methods of %SegmentIterator%.prototype:
 
-#### `%BoundaryIterator%.prototype.next()`
+#### `%SegmentIterator%.prototype.next()`
 
-The `next` method implements the <i>Iterator</i> interface, finding the next boundary and returning an `IteratorResult` object relating to it. The object includes `index` and `precedingSegmentType` fields corresponding to iteration result data.
+The `next` method implements the <i>Iterator</i> interface, finding the next segment and returning a corresponding <i>IteratorResult</i> object as described above.
 
-#### `%BoundaryIterator%.prototype.following(from)`
+#### `%SegmentIterator%.prototype.following(startAfter = this.index)`
 
-Move the iterator index to the boundary following the code unit index _from_ (or after its current index if _from_ is not provided). Returns *true* if the end of the string was reached.
+Advances the iterator to the first segment in the string starting after the specified code unit index (defaulting to the current index when not provided).
+Returns the iterator, or throws if the starting index was out of bounds (e.g., was already past the end of the string).
 
-#### `%BoundaryIterator%.prototype.preceding(from)`
+#### `%SegmentIterator%.prototype.preceding(startBefore = this.index)`
 
-Move the iterator index to the boundary preceding the position before the code unit index _from_ (or before its current index if _from_ is not provided). Returns *true* if the beginning of the string was reached.
+Moves the iterator backward to the first segment in the string starting before the specified code unit index (defaulting to the current index when not provided).
+Returns the iterator, or throws if the starting index was out of bounds (e.g., was already negative).
 
-#### `get %BoundaryIterator%.prototype.index`
+### Properties of %SegmentIterator%.prototype:
 
-Return the current boundary position as a count of code units in string that precede it. The initial value is 0, corresponding to a boundary at the start of the string.
+#### `get %SegmentIterator%.prototype.segment`
 
-#### `get %BoundaryIterator%.prototype.precedingSegmentType`
+A read-only accessor property that returns the current string segment, as if from an [iteration result](#iteration-result-data).
+The initial value is `null`.
 
-The type of the segment which precedes the current iterator location in logical order. If there is no preceding segment because the current index is at the start of the string, or if the granularity is "grapheme", then this will be `undefined`.
+#### `get %SegmentIterator%.prototype.index`
+
+A read-only accessor property that returns the code unit index within the iterated string at which the current segment starts, as if from an [iteration result](#iteration-result-data).
+The initial value is `-1` (i.e., a position immediately preceding the first segment), and the highest possible value is the length of the iterated string (i.e., a position immediately following the last code unit).
+
+#### `get %SegmentIterator%.prototype.isWordLike`
+
+A read-only accessor property that returns the "word-like" classification of the current string segment, as if from an [iteration result](#iteration-result-data).
+The initial value for granularity "word" is `null`, and for all other granularities is `undefined`.
 
 ## FAQ
 
-Q: Why should we pass a locale and options bag for grapheme boundaries? Isn't there just one way to do it?
+### Why should we pass a locale and options bag for grapheme boundaries? Isn't there just one way to do it?
 
-A: The situation is a little more complicated, e.g., for Indic scripts. Work is ongoing to support grapheme boundary options for these scripts better; see [this bug](http://unicode.org/cldr/trac/ticket/2142), and in particular [this CLDR wiki page](http://cldr.unicode.org/development/development-process/design-proposals/grapheme-usage). Seems like CLDR/ICU don't support this yet, but it's planned.
+The situation is a little more complicated, e.g., for Indic scripts. Work is ongoing to support grapheme boundary options for these scripts better; see [this bug](http://unicode.org/cldr/trac/ticket/2142), and in particular [this CLDR wiki page](http://cldr.unicode.org/development/development-process/design-proposals/grapheme-usage). Seems like CLDR/ICU don't support this yet, but it's planned.
 
-Q: Shouldn't we be putting new APIs in built-in modules?
+### Shouldn't we be putting new APIs in built-in modules?
 
-A: If built-in modules had come out before this gets to Stage 3, that sounds like a good option. However, so far the idea in TC39 has been not to block either thing on the other. Built-in modules still have some big questions to resolve, e.g., how/whether polyfills should interact with them.
+If built-in modules had come out before this gets to Stage 3, that sounds like a good option. However, so far the idea in TC39 has been not to block either thing on the other. Built-in modules still have some big questions to resolve, e.g., how/whether polyfills should interact with them.
 
-Q: Why is line breaking not included?
+### Why is line breaking not included?
 
 Line breaking was provided in an earlier version of this API, but it is excluded because simply a line breaking API would be incomplete: Line breaking is typically used when laying out text, and text layout requires a larger set of APIs, e.g., determining the width of a rendered string of text. For this reason, we suggest continued development of a line breaking API as part of the [CSS Houdini](https://github.com/w3c/css-houdini-drafts/wiki) effort.
 
-Q: Why is hyphenation not included?
+### Why is hyphenation not included?
 
-A: Hyphenation is expected to have a different sort of API shape for various reasons:
+Hyphenation is expected to have a different sort of API shape for various reasons:
 - Adding a hyphenation break may change the spelling of the affected text
 - There may be hyphenation breaks of different priorities
 - Hyphenation plays into line layout and font rendering in a more complex way, and we might want to expose it at that level (e.g., in the Web Platform rather than ECMAScript)
 - Hyphenation is just a less well-developed thing in the internationalization world. CLDR and ICU don't support it yet; certain web browsers are only getting support for it now in CSS. It's often not done perfectly. It could use some more time to bake. By contrast, word, grapheme, sentence and line breaks have been in the Unicode specification for a long time; this is a shovel-ready project.
 
-Q: Why is this API stateful?
+### Why is this API stateful?
 
-It would be possible to make a stateless API without a BoundaryIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next boundary before or after. This method would return an object `{precedingSegmentType, index}` similar to what `next()` returns in this API. However, there are a few downsides to this approach:
+It would be possible to make a stateless API without a SegmentIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next boundary before or after. This method would return an object similar to what `next()` returns in this API. However, there are a few downsides to this approach:
 - Performance:
   - Often, JavaScript implementations need to take an extra step to convert an input string into a form that's usable for the external internationalization library. When querying several positions on a single string, it is nice to reuse the new form of the string; it would be difficult to cache this and invalidate the cache when appropriate.
-  - The `{precedingSegmentType, index}` object may be a difficult allocation to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
-- Convenience: Many (most?) usages of this API want to iterate through a string, either forwards or backwards, and get all of the appropriate boundaries, possibly interspersed with doing related work. A stateful API may be more terse for this sort of use case--no need to keep track of the previous position and feed it back in.
+  - Allocation of the <i>IteratorResult</i> objects may be difficult to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
+- Convenience: Many (most?) usages of this API want to iterate through a string, either forwards or backwards, and get all of the appropriate segments, possibly interspersed with doing related work. A stateful API may be more terse for this sort of use case—no need to keep track of the previous position and feed it back in.
 
 It is easy to create a stateless API based on this stateful one, or vice versa, in user JavaScript code.
 
-Q: Why is this an Intl API instead of String methods?
+### Why is this an Intl API instead of String methods?
 
-A: All of these boundary types are actually locale-dependent, and some allow complex options. The result of the `segment` method is a BoundaryIterator. For many non-trivial cases like this, analogous APIs are put in ECMA-402's Intl object. This allows for the work that happens on each instantiation to be shared, improving performance. We could make a convenience method on String as a follow-on proposal.
+All of these boundary types are actually locale-dependent, and some allow complex options. The result of the `segment` method is a SegmentIterator. For many non-trivial cases like this, analogous APIs are put in ECMA-402's Intl object. This allows for the work that happens on each instantiation to be shared, improving performance. We could make a convenience method on String as a follow-on proposal.
 
-Q: What exactly does the index refer to?
+### What exactly does the index refer to?
 
-An index *n* refers to the boundary preceding the code unit *n*. For example, when iterating over the string "Hello, world💙" by words in English, there will be boundaries at 0, 5, 6, 7, 12, and 14. The definition of these boundary indices does not depend on whether forwards or backwards iteration is used.
+An index *n* refers to the code unit index within a string that is potentially the start of a segment.
+For example, when iterating over the string "Hello, world💙" by words in English,segments will start at indexes 0, 5, 6, 7, 12, and 14 (i.e., the string gets segmented like `┃Hello┃,┃ ┃world┃💙┃`, with the final segment consisting of a surrogate pair of two code units encoding a single code point).
+The definition of these boundary indexes does not depend on whether forwards or backwards iteration is used.
+
+### What happens when segmenting an empty string?
+
+No segments will be found, but random access will succeed once in each direction (e.g., `segmenter.segment("").following()` will return an iterator at index 0 with a null `segment`, and `segmenter.segment("").preceding(Infinity)` will return an iterator at index -1 with a null `segment`).
+Attempts to advance forward from 0 or higher, or backward from -1 or lower, will fail with a RangeError.
+We essentially synthesize two positions at which there is no segment (not just for empty string but for _all_ input), one before the string (which is also the starting point) and one after it.
+
+### What happens when I try to use random access with non-Number values?
+
+Someone's in QA. 😉
+The random access methods treat `undefined` starting index the same as unspecified, and will start from the current index.
+All other inputs are processed into integer Numbers—`null` becomes 0, Booleans become 0 or 1, Strings are parsed as string numeric literals, Objects are cast to primitives, and Symbols, BigInts, and `NaN` fail. Fractional components are truncated, but infinite Numbers are accepted as-is.
+
+### Do you feel bad about violating [<i>Iterator</i> interface best practices](https://tc39.es/ecma262/#sec-iterator-interface) by allowing random access to "reset" finished iterators?
+
+No, not really.
