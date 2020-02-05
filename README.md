@@ -46,7 +46,7 @@ for (let {segment, index, isWordLike} of segments) {
 // segment at code units [18, 19): «.»
 ```
 
-For performance and flexibility, they also support direct random access.
+For flexibility and advanced use cases, they also support direct random access.
 
 ```js
 // ┃0 1 2 3 4 5┃6┃7┃8┃9
@@ -55,49 +55,22 @@ let input = "Allons-y!";
 
 let segmenter = new Intl.Segmenter("fr", {granularity: "word"});
 let segments = segmenter.segment(input);
-let done = false;
+let current = undefined;
 
-segments.index                   // → -1
-segments.segment                 // → null
-segments.isWordLike              // → null
+current = segments.containing(0)
+// → { index: 0, segment: "Allons", isWordLike: true }
 
-segments.following()             // → [object Segmenter String Iterator]
-segments.index                   // → 0
-segments.segment                 // → "Allons"
-segments.isWordLike              // → true
+current = segments.containing(6)
+// → { index: 6, segment: "-", isWordLike: false }
 
-segments.following(4)            // → [object Segmenter String Iterator]
-segments.index                   // → 6
-segments.segment                 // → "-"
-segments.isWordLike              // → false
+current = segments.containing(current.index + current.segment.length)
+// → { index: 7, segment: "y", isWordLike: true }
 
-segments.following()             // → [object Segmenter String Iterator]
-segments.index                   // → 7
-segments.segment                 // → "y"
-segments.isWordLike              // → true
+current = segments.containing(current.index + current.segment.length)
+// → { index: 8, segment: "!", isWordLike: false }
 
-segments.following().following() // → [object Segmenter String Iterator]
-segments.index                   // → 9
-segments.segment                 // → null
-segments.isWordLike              // → null
-
-segments.following()             // → RangeError
-segments.index                   // → 9
-
-segments.preceding()             // → [object Segmenter String Iterator]
-segments.index                   // → 8
-segments.segment                 // → "!"
-segments.isWordLike              // → false
-
-segments.preceding(3)            // → [object Segmenter String Iterator]
-segments.index                   // → 0
-segments.segment                 // → "Allons"
-segments.isWordLike              // → true
-
-segments.preceding()             // → [object Segmenter String Iterator]
-segments.index                   // → -1
-segments.segment                 // → null
-segments.isWordLike              // → null
+current = segments.containing(current.index + current.segment.length)
+// → undefined
 ```
 
 ## API
@@ -111,49 +84,36 @@ If `options` is provided, it is treated as an object and its `granularity` prope
 
 ### `Intl.Segmenter.prototype.segment(string)`
 
-Creates a new `%SegmentIterator%` instance which will lazily find segments in the input string using the Segmenter's locale and granularity, keeping track of its current position within the string.
+Creates a new [<i>Iterable</i>](https://tc39.es/ecma262/#sec-iterable-interface) `%Segments%` instance for the input string using the Segmenter's locale and granularity.
 
-### `%SegmentIterator%.prototype`
+### Segment data
 
-#### Iteration result data
-
-The `value` property of an <i>IteratorResult</i> object produced by a `%SegmentIterator%` instance is an object with the following data properties:
+Segments are described by plain objects with the following data properties:
 * `segment` is the string segment.
 * `index` is the code unit index in the string at which the segment begins.
 * `isWordLike` is `true` when granularity is "word" and the segment is _word-like_ (consisting of letters/numbers/ideographs/etc.), `false` when granularity is "word" and the segment is not _word-like_ (consisting of spaces/punctuation/etc.), and `undefined` when granularity is not "word".
+
+### Properties of %Segments%.prototype:
+
+#### `get %Segments%.prototype.string`
+
+A read-only accessor property that returns the string input to `Intl.Segmenter.prototype.segment`.
+
+### Methods of %Segments%.prototype:
+
+#### `%Segments%.prototype.containing(index)`
+
+Returns a segment data object describing the segment in the string including the code unit at the specified index, or `undefined` if the index is out of bounds.
+
+#### `%Segments%.prototype[Symbol.iterator]`
+
+Creates a new `%SegmentIterator%` instance which will lazily find segments in the input string using the Segmenter's locale and granularity, keeping track of its current position within the string.
 
 ### Methods of %SegmentIterator%.prototype:
 
 #### `%SegmentIterator%.prototype.next()`
 
-The `next` method implements the <i>Iterator</i> interface, finding the next segment and returning a corresponding <i>IteratorResult</i> object as described above.
-
-#### `%SegmentIterator%.prototype.following(startAfter = this.index)`
-
-Advances the iterator to the first segment in the string starting after the specified code unit index (defaulting to the current index when not provided).
-Returns the iterator, or throws if the starting index was out of bounds (e.g., was already past the end of the string).
-
-#### `%SegmentIterator%.prototype.preceding(startBefore = this.index)`
-
-Moves the iterator backward to the first segment in the string starting before the specified code unit index (defaulting to the current index when not provided).
-Returns the iterator, or throws if the starting index was out of bounds (e.g., was already negative).
-
-### Properties of %SegmentIterator%.prototype:
-
-#### `get %SegmentIterator%.prototype.segment`
-
-A read-only accessor property that returns the current string segment, as if from an [iteration result](#iteration-result-data).
-The initial value is `null`.
-
-#### `get %SegmentIterator%.prototype.index`
-
-A read-only accessor property that returns the code unit index within the iterated string at which the current segment starts, as if from an [iteration result](#iteration-result-data).
-The initial value is `-1` (i.e., a position immediately preceding the first segment), and the highest possible value is the length of the iterated string (i.e., a position immediately following the last code unit).
-
-#### `get %SegmentIterator%.prototype.isWordLike`
-
-A read-only accessor property that returns the "word-like" classification of the current string segment, as if from an [iteration result](#iteration-result-data).
-The initial value for granularity "word" is `null`, and for all other granularities is `undefined`.
+The `next` method implements the <i>Iterator</i> interface, finding the next segment and returning a corresponding <i>IteratorResult</i> object whose `value` property is a segment data object as described above.
 
 ## FAQ
 
@@ -177,15 +137,11 @@ Hyphenation is expected to have a different sort of API shape for various reason
 - Hyphenation plays into line layout and font rendering in a more complex way, and we might want to expose it at that level (e.g., in the Web Platform rather than ECMAScript)
 - Hyphenation is just a less well-developed thing in the internationalization world. CLDR and ICU don't support it yet; certain web browsers are only getting support for it now in CSS. It's often not done perfectly. It could use some more time to bake. By contrast, word, grapheme, sentence and line breaks have been in the Unicode specification for a long time; this is a shovel-ready project.
 
-### Why is this API stateful?
+### Why is random-access stateless?
 
-It would be possible to make a stateless API without a SegmentIterator, where instead, a Segmenter has two methods, with two arguments: a string and an offset, for finding the next boundary before or after. This method would return an object similar to what `next()` returns in this API. However, there are a few downsides to this approach:
-- Performance:
-  - Often, JavaScript implementations need to take an extra step to convert an input string into a form that's usable for the external internationalization library. When querying several positions on a single string, it is nice to reuse the new form of the string; it would be difficult to cache this and invalidate the cache when appropriate.
-  - Allocation of the <i>IteratorResult</i> objects may be difficult to optimize away. Some usages of this library are performance-sensitive and may benefit from a lighter-weight API which avoids the allocation.
-- Convenience: Many (most?) usages of this API want to iterate through a string, either forwards or backwards, and get all of the appropriate segments, possibly interspersed with doing related work. A stateful API may be more terse for this sort of use case—no need to keep track of the previous position and feed it back in.
-
-It is easy to create a stateless API based on this stateful one, or vice versa, in user JavaScript code.
+It would be possible to expose methods on %SegmentIterator%.prototype that mutate internal state (e.g., `seek([inclusiveStartIndex = thisIterator.index + 1])` and `seekBefore([exclusiveLastIndex = thisIterator.index])`, and in fact these were part of earlier designs.
+They were dropped for consistency with other ECMA-262 iterators (whose movement is always forward and without gaps).
+If real-world use reveals that their absence is an ergonomic and/or performance flaw, they can be added in a followup proposal.
 
 ### Why is this an Intl API instead of String methods?
 
@@ -199,16 +155,9 @@ The definition of these boundary indexes does not depend on whether forwards or 
 
 ### What happens when segmenting an empty string?
 
-No segments will be found, but random access will succeed once in each direction (e.g., `segmenter.segment("").following()` will return an iterator at index 0 with a null `segment`, and `segmenter.segment("").preceding(Infinity)` will return an iterator at index -1 with a null `segment`).
-Attempts to advance forward from 0 or higher, or backward from -1 or lower, will fail with a RangeError.
-We essentially synthesize two positions at which there is no segment (not just for empty string but for _all_ input), one before the string (which is also the starting point) and one after it.
+No segments will be found, and iterators will complete immediately upon first `next()` access.
 
 ### What happens when I try to use random access with non-Number values?
 
 _Someone's_ in QA. 😉
-The random access methods treat `undefined` starting index the same as unspecified, and will start from the current index.
-All other inputs are processed into integer Numbers—`null` becomes 0, Booleans become 0 or 1, Strings are parsed as string numeric literals, Objects are cast to primitives, and Symbols, BigInts, and `NaN` fail. Fractional components are truncated, but infinite Numbers are accepted as-is.
-
-### Do you feel bad about violating [<i>Iterator</i> interface best practices](https://tc39.es/ecma262/#sec-iterator-interface) by allowing random access to "reset" finished iterators?
-
-No, not really.
+Arguments are processed into integer Numbers—`null` becomes 0, Booleans become 0 or 1, Strings are parsed as string numeric literals, Objects are cast to primitives, and Symbols, BigInts, `undefined`, and `NaN` fail. Fractional components are truncated, but infinite Numbers are accepted as-is (although they are always out of bounds and will therefore never find a segment).
