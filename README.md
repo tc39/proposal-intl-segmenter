@@ -93,12 +93,6 @@ Segments are described by plain objects with the following data properties:
 * `index` is the code unit index in the string at which the segment begins.
 * `isWordLike` is `true` when granularity is "word" and the segment is _word-like_ (consisting of letters/numbers/ideographs/etc.), `false` when granularity is "word" and the segment is not _word-like_ (consisting of spaces/punctuation/etc.), and `undefined` when granularity is not "word".
 
-### Properties of %Segments%.prototype:
-
-#### `get %Segments%.prototype.string`
-
-A read-only accessor property that returns the string input to `Intl.Segmenter.prototype.segment`.
-
 ### Methods of %Segments%.prototype:
 
 #### `%Segments%.prototype.containing(index)`
@@ -108,6 +102,12 @@ Returns a segment data object describing the segment in the string including the
 #### `%Segments%.prototype[Symbol.iterator]`
 
 Creates a new `%SegmentIterator%` instance which will lazily find segments in the input string using the Segmenter's locale and granularity, keeping track of its current position within the string.
+
+### Properties of %Segments% instances
+
+#### `string`
+
+A read-only data property that returns the string input to `Intl.Segmenter.prototype.segment`.
 
 ### Methods of %SegmentIterator%.prototype:
 

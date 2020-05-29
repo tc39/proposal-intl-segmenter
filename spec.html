@@ -253,6 +253,7 @@ emu-issue:before {
         1. Let _segments_ be ! ObjectCreate(%SegmentsPrototype%, _internalSlotsList_).
         1. Set _segments_.[[SegmentsSegmenter]] to _segmenter_.
         1. Set _segments_.[[SegmentsString]] to _string_.
+        1. Perform ! OrdinaryDefineOwnProperty(_segments_, *"string"*, PropertyDescriptor { [[Value]]: _string_, [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }).
         1. Return _segments_.
       </emu-alg>
     </emu-clause>
@@ -283,16 +284,6 @@ emu-issue:before {
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-get-%segmentsprototype%.string">
-        <h1>get %SegmentsPrototype%.string</h1>
-        <p>`%SegmentsPrototype%.string` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps:</p>
-        <emu-alg>
-          1. Let _segments_ be *this* value.
-          1. Perform ? RequireInternalSlot(_segments_, [[SegmentsSegmenter]]).
-          1. Return _segments_.[[SegmentsString]].
-        </emu-alg>
-      </emu-clause>
-
       <emu-clause id="sec-%segmentsprototype%-@@iterator">
         <h1>%SegmentsPrototype% [ @@iterator ] ()</h1>
         <p>The `@@iterator` method is called on a Segments instance to create a Segment Iterator over its string using the locale and options of its constructing Intl.Segmenter instance. The following steps are taken:</p>
@@ -320,6 +311,13 @@ emu-issue:before {
       <p>
         Segments instances have a [[SegmentsString]] internal slot that references the String value whose segments they expose.
       </p>
+
+      <p>Segments instances also have the following properties:</p>
+
+      <emu-clause id="sec-segments.string">
+        <h1>string</h1>
+        <p>The *"string"* property of a Segments instance contains the string being segmented. This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
+      </emu-clause>
     </emu-clause>
   </emu-clause>
 
