@@ -105,6 +105,10 @@ Creates a new `%SegmentIterator%` instance which will lazily find segments in th
 
 ### Properties of %Segments% instances
 
+#### `segmenter`
+
+A read-only data property that returns the constructing `%Segments%` instance.
+
 #### `string`
 
 A read-only data property that returns the string input to `Intl.Segmenter.prototype.segment`.

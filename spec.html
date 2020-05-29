@@ -253,6 +253,7 @@ emu-issue:before {
         1. Let _segments_ be ! ObjectCreate(%SegmentsPrototype%, _internalSlotsList_).
         1. Set _segments_.[[SegmentsSegmenter]] to _segmenter_.
         1. Set _segments_.[[SegmentsString]] to _string_.
+        1. Perform ! OrdinaryDefineOwnProperty(_segments_, *"segmenter"*, PropertyDescriptor { [[Value]]: _segmenter_, [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }).
         1. Perform ! OrdinaryDefineOwnProperty(_segments_, *"string"*, PropertyDescriptor { [[Value]]: _string_, [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }).
         1. Return _segments_.
       </emu-alg>
@@ -313,6 +314,11 @@ emu-issue:before {
       </p>
 
       <p>Segments instances also have the following properties:</p>
+
+      <emu-clause id="sec-segments.segmenter">
+        <h1>segmenter</h1>
+        <p>The *"segmenter"* property of a Segments instance references the Intl.Segmenter instance that created it. This property has the attributes { [[Writable]]: *false*, [[Enumerable]]: *false*, [[Configurable]]: *false* }.</p>
+      </emu-clause>
 
       <emu-clause id="sec-segments.string">
         <h1>string</h1>
