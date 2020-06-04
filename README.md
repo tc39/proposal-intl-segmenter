@@ -91,6 +91,7 @@ Creates a new [<i>Iterable</i>](https://tc39.es/ecma262/#sec-iterable-interface)
 Segments are described by plain objects with the following data properties:
 * `segment` is the string segment.
 * `index` is the code unit index in the string at which the segment begins.
+* `input` is the string being segmented.
 * `isWordLike` is `true` when granularity is "word" and the segment is _word-like_ (consisting of letters/numbers/ideographs/etc.), `false` when granularity is "word" and the segment is not _word-like_ (consisting of spaces/punctuation/etc.), and `undefined` when granularity is not "word".
 
 ### Properties of %Segments%.prototype:
