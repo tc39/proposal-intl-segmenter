@@ -60,6 +60,9 @@ let current = undefined;
 current = segments.containing(0)
 // → { index: 0, segment: "Allons", isWordLike: true }
 
+current = segments.containing(5)
+// → { index: 0, segment: "Allons", isWordLike: true }
+
 current = segments.containing(6)
 // → { index: 6, segment: "-", isWordLike: false }
 
