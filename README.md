@@ -94,12 +94,6 @@ Segments are described by plain objects with the following data properties:
 * `input` is the string being segmented.
 * `isWordLike` is `true` when granularity is "word" and the segment is _word-like_ (consisting of letters/numbers/ideographs/etc.), `false` when granularity is "word" and the segment is not _word-like_ (consisting of spaces/punctuation/etc.), and `undefined` when granularity is not "word".
 
-### Properties of %Segments%.prototype:
-
-#### `get %Segments%.prototype.string`
-
-A read-only accessor property that returns the string input to `Intl.Segmenter.prototype.segment`.
-
 ### Methods of %Segments%.prototype:
 
 #### `%Segments%.prototype.containing(index)`

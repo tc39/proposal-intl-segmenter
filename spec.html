@@ -257,16 +257,6 @@ contributors: Richard Gibson, Daniel Ehrenberg
         </emu-alg>
       </emu-clause>
 
-      <emu-clause id="sec-get-%segmentsprototype%.string">
-        <h1>get %SegmentsPrototype%.string</h1>
-        <p>`%SegmentsPrototype%.string` is an accessor property whose set accessor function is *undefined*. Its get accessor function performs the following steps:</p>
-        <emu-alg>
-          1. Let _segments_ be *this* value.
-          1. Perform ? RequireInternalSlot(_segments_, [[SegmentsSegmenter]]).
-          1. Return _segments_.[[SegmentsString]].
-        </emu-alg>
-      </emu-clause>
-
       <emu-clause id="sec-%segmentsprototype%-@@iterator">
         <h1>%SegmentsPrototype% [ @@iterator ] ()</h1>
         <p>The `@@iterator` method is called on a Segments instance to create a Segment Iterator over its string using the locale and options of its constructing Intl.Segmenter instance. The following steps are taken:</p>
