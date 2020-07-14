@@ -299,7 +299,7 @@ contributors: Richard Gibson, Daniel Ehrenberg
       <p>The CreateSegmentIterator abstract operation is called with arguments Intl.Segmenter instance _segmenter_ and String value _string_ to create a Segment Iterator over _string_ using the locale and options of _segmenter_. The following steps are taken:</p>
       <emu-alg>
         1. Let _internalSlotsList_ be &laquo; [[IteratingSegmenter]], [[IteratedString]], [[IteratedStringNextSegmentCodeUnitIndex]] &raquo;.
-        1. Set _iterator_ to ObjectCreate(%SegmentIteratorPrototype%, _internalSlotsList_).
+        1. Let _iterator_ be ObjectCreate(%SegmentIteratorPrototype%, _internalSlotsList_).
         1. Set _iterator_.[[IteratingSegmenter]] to _segmenter_.
         1. Set _iterator_.[[IteratedString]] to _string_.
         1. Set _iterator_.[[IteratedStringNextSegmentCodeUnitIndex]] to 0.
