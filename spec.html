@@ -31,7 +31,7 @@ contributors: Richard Gibson, Daniel Ehrenberg
       <emu-alg>
         1. If NewTarget is *undefined*, throw a *TypeError* exception.
         1. Let _internalSlotsList_ be &laquo; [[InitializedSegmenter]], [[Locale]], [[SegmenterGranularity]] &raquo;.
-        1. Let _segmenter_ be ? OrdinaryCreateFromConstructor(NewTarget, `"%Segmenter.prototype%"`, _internalSlotsList_).
+        1. Let _segmenter_ be ? OrdinaryCreateFromConstructor(NewTarget, *"%Segmenter.prototype%"*, _internalSlotsList_).
         1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
         1. If _options_ is *undefined*, then
           1. Let _options_ be ! ObjectCreate(*null*).
