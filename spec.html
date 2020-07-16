@@ -244,7 +244,7 @@ contributors: Richard Gibson, Daniel Ehrenberg
         <h1>%Segments.prototype%.containing ( _index_ )</h1>
         <p>The `containing` method is called on a Segments instance with argument _index_ to return a Segment Data object describing the segment in the string including the code unit at the specified index according to the locale and options of the Segments intance's constructing Intl.Segmenter instance. The following steps are taken:</p>
         <emu-alg>
-          1. Let _segments_ be *this* value.
+          1. Let _segments_ be the *this* value.
           1. Perform ? RequireInternalSlot(_segments_, [[SegmentsSegmenter]]).
           1. Let _segmenter_ be _segments_.[[SegmentsSegmenter]].
           1. Let _string_ be _segments_.[[SegmentsString]].
@@ -261,7 +261,7 @@ contributors: Richard Gibson, Daniel Ehrenberg
         <h1>%Segments.prototype% [ @@iterator ] ()</h1>
         <p>The `@@iterator` method is called on a Segments instance to create a Segment Iterator over its string using the locale and options of its constructing Intl.Segmenter instance. The following steps are taken:</p>
         <emu-alg>
-          1. Let _segments_ be *this* value.
+          1. Let _segments_ be the *this* value.
           1. Perform ? RequireInternalSlot(_segments_, [[SegmentsSegmenter]]).
           1. Let _segmenter_ be _segments_.[[SegmentsSegmenter]].
           1. Let _string_ be _segments_.[[SegmentsString]].
@@ -299,7 +299,7 @@ contributors: Richard Gibson, Daniel Ehrenberg
       <p>The CreateSegmentIterator abstract operation is called with arguments Intl.Segmenter instance _segmenter_ and String value _string_ to create a Segment Iterator over _string_ using the locale and options of _segmenter_. The following steps are taken:</p>
       <emu-alg>
         1. Let _internalSlotsList_ be &laquo; [[IteratingSegmenter]], [[IteratedString]], [[IteratedStringNextSegmentCodeUnitIndex]] &raquo;.
-        1. Set _iterator_ to ObjectCreate(%SegmentIterator.prototype%, _internalSlotsList_).
+        1. Let _iterator_ be ObjectCreate(%SegmentIterator.prototype%, _internalSlotsList_).
         1. Set _iterator_.[[IteratingSegmenter]] to _segmenter_.
         1. Set _iterator_.[[IteratedString]] to _string_.
         1. Set _iterator_.[[IteratedStringNextSegmentCodeUnitIndex]] to 0.
@@ -321,7 +321,7 @@ contributors: Richard Gibson, Daniel Ehrenberg
         <h1>%SegmentIterator.prototype%.next ()</h1>
         <p>The `next` method is called on a Segment Iterator instance to advance it forward one segment and return an <i>IteratorResult</i> object either describing the new segment or declaring iteration done. The following steps are taken:</p>
         <emu-alg>
-          1. Let _iterator_ be *this* value.
+          1. Let _iterator_ be the *this* value.
           1. Perform ? RequireInternalSlot(_iterator_, [[IteratingSegmenter]]).
           1. Let _segmenter_ be _iterator_.[[IteratingSegmenter]].
           1. Let _string_ be _iterator_.[[IteratedString]].
