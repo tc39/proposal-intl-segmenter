@@ -428,13 +428,15 @@ contributors: Richard Gibson, Daniel Ehrenberg
         1. If _direction_ is ~before~, then
           1. Assert: _len_ &gt; 0.
           1. Assert: _startIndex_ &ge; 0.
+          1. Assert: _startIndex_ &lt; _len_.
           1. Search _string_ for the last segmentation boundary that is preceded by at most _startIndex_ code units from the beginning, using locale _locale_ and text element granularity _granularity_.
-          1. If a boundary is found, return the count of code units in _string_ preceding it. Otherwise, return *0*.
-        1. Else
-          1. Assert: _direction_ is ~after~.
-          1. If _len_ is 0 or _startIndex_ &ge; _len_, return *+&infin;*.
-          1. Search _string_ for the first segmentation boundary that follows the code unit at index _startIndex_, using locale _locale_ and text element granularity _granularity_.
-          1. If a boundary is found, return the count of code units in _string_ preceding it. Otherwise, return _len_.
+          1. If a boundary is found, return the count of code units in _string_ preceding it. 
+          1. Return *0*.
+        1. Assert: _direction_ is ~after~.
+        1. If _len_ is 0 or _startIndex_ &ge; _len_, return *+&infin;*.
+        1. Search _string_ for the first segmentation boundary that follows the code unit at index _startIndex_, using locale _locale_ and text element granularity _granularity_.
+        1. If a boundary is found, return the count of code units in _string_ preceding it. 
+        1. Return _len_.
       </emu-alg>
     </emu-clause>
   </emu-clause>
