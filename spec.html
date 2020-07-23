@@ -426,7 +426,6 @@ contributors: Richard Gibson, Daniel Ehrenberg
         1. Let _granularity_ be _segmenter_.[[SegmenterGranularity]].
         1. Let _len_ be the length of _string_.
         1. If _direction_ is ~before~, then
-          1. Assert: _len_ &gt; 0.
           1. Assert: _startIndex_ &ge; 0.
           1. Assert: _startIndex_ &lt; _len_.
           1. Search _string_ for the last segmentation boundary that is preceded by at most _startIndex_ code units from the beginning, using locale _locale_ and text element granularity _granularity_.
