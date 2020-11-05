@@ -10,6 +10,14 @@ copyright: false
 contributors: Richard Gibson, Daniel Ehrenberg
 </pre>
 <emu-biblio href="./biblio.json"></emu-biblio>
+<script>
+// Pretty much everything is under the first heading, so expand that by default.
+document.addEventListener("DOMContentLoaded", function() {
+  try {
+    document.querySelector("#menu-toc li").click();
+  } catch (ex) {}
+});
+</script>
 
 <emu-clause id="segmenter-objects">
   <h1>Segmenter Objects</h1>
