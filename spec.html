@@ -249,7 +249,7 @@ contributors: Richard Gibson, Daniel Ehrenberg
           1. Let _segmenter_ be _segments_.[[SegmentsSegmenter]].
           1. Let _string_ be _segments_.[[SegmentsString]].
           1. Let _len_ be the length of _string_.
-          1. Let _n_ be ? ToInteger(_index_).
+          1. Let _n_ be ? ToIntegerOrInfinity(_index_).
           1. If _n_ &lt; 0 or _n_ &ge; _len_, return *undefined*.
           1. Let _startIndex_ be ! FindBoundary(_segmenter_, _string_, _n_, ~before~).
           1. Let _endIndex_ be ! FindBoundary(_segmenter_, _string_, _n_, ~after~).

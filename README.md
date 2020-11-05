@@ -158,4 +158,4 @@ No segments will be found, and iterators will complete immediately upon first `n
 ### What happens when I try to use random access with non-Number values?
 
 _Someone's_ in QA. 😉
-Arguments are processed into integer Numbers—`null` becomes 0, Booleans become 0 or 1, Strings are parsed as string numeric literals, Objects are cast to primitives, and Symbols, BigInts, `undefined`, and `NaN` fail. Fractional components are truncated, but infinite Numbers are accepted as-is (although they are always out of bounds and will therefore never find a segment).
+The `containing` argument is processed into an integer Number—`null`, `undefined`, and `NaN` become 0, Booleans become 0 or 1, Strings are parsed as string numeric literals, Objects are cast to primitives, and Symbols and BigInts fail with a TypeError exception. Fractional components are truncated, but infinite Numbers are accepted as-is (although they are always out of bounds and will therefore never find a segment).
