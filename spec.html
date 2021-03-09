@@ -41,10 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
         1. Let _internalSlotsList_ be &laquo; [[InitializedSegmenter]], [[Locale]], [[SegmenterGranularity]] &raquo;.
         1. Let _segmenter_ be ? OrdinaryCreateFromConstructor(NewTarget, *"%Segmenter.prototype%"*, _internalSlotsList_).
         1. Let _requestedLocales_ be ? CanonicalizeLocaleList(_locales_).
-        1. If _options_ is *undefined*, then
-          1. Let _options_ be ! ObjectCreate(*null*).
-        1. Else
-          1. Let _options_ be ? ToObject(_options_).
+        1. Set _options_ to ? GetOptionsObject(_options_).
         1. Let _opt_ be a new Record.
         1. Let _matcher_ be ? GetOption(_options_, `"localeMatcher"`, `"string"`, &laquo; `"lookup"`, `"best fit"` &raquo;, `"best fit"`).
         1. Set _opt_.[[localeMatcher]] to _matcher_.
@@ -98,11 +95,11 @@ document.addEventListener("DOMContentLoaded", function() {
       <h1>Internal slots</h1>
 
       <p>
-        The value of the [[AvailableLocales]] internal slot is implementation defined within the constraints described in <emu-xref href="#sec-internal-slots"></emu-xref>.
+        The value of the [[AvailableLocales]] internal slot is implementation-defined within the constraints described in <emu-xref href="#sec-internal-slots"></emu-xref>.
       </p>
 
       <p>
-        The value of the [[LocaleData]] internal slot is implementation defined within the constraints described in <emu-xref href="#sec-internal-slots"></emu-xref>.
+        The value of the [[LocaleData]] internal slot is implementation-defined within the constraints described in <emu-xref href="#sec-internal-slots"></emu-xref>.
       </p>
 
       <p>
@@ -167,12 +164,12 @@ document.addEventListener("DOMContentLoaded", function() {
       <emu-alg>
         1. Let _segmenter_ be the *this* value.
         1. Perform ? RequireInternalSlot(_segmenter_, [[InitializedSegmenter]]).
-        1. Let _options_ be ! ObjectCreate(%Object.prototype%).
+        1. Let _options_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. For each row of <emu-xref href="#table-segmenter-resolvedoptions-properties"></emu-xref>, except the header row, in table order, do
           1. Let _p_ be the Property value of the current row.
           1. Let _v_ be the value of _segmenter_'s internal slot whose name is the Internal Slot value of the current row.
-          1. If _v_ is not *undefined*, then
-            1. Perform ! CreateDataPropertyOrThrow(_options_, _p_, _v_).
+          1. Assert: _v_ is not *undefined*.
+          1. Perform ! CreateDataPropertyOrThrow(_options_, _p_, _v_).
         1. Return _options_.
       </emu-alg>
 
@@ -232,7 +229,7 @@ document.addEventListener("DOMContentLoaded", function() {
       <p>The CreateSegmentsObject abstract operation is called with arguments Intl.Segmenter instance _segmenter_ and String value _string_ to create a Segments instance referencing both. The following steps are taken:</p>
       <emu-alg>
         1. Let _internalSlotsList_ be &laquo; [[SegmentsSegmenter]], [[SegmentsString]] &raquo;.
-        1. Let _segments_ be ! ObjectCreate(%Segments.prototype%, _internalSlotsList_).
+        1. Let _segments_ be ! OrdinaryObjectCreate(%Segments.prototype%, _internalSlotsList_).
         1. Set _segments_.[[SegmentsSegmenter]] to _segmenter_.
         1. Set _segments_.[[SegmentsString]] to _string_.
         1. Return _segments_.
@@ -307,7 +304,7 @@ document.addEventListener("DOMContentLoaded", function() {
       <p>The CreateSegmentIterator abstract operation is called with arguments Intl.Segmenter instance _segmenter_ and String value _string_ to create a Segment Iterator over _string_ using the locale and options of _segmenter_. The following steps are taken:</p>
       <emu-alg>
         1. Let _internalSlotsList_ be &laquo; [[IteratingSegmenter]], [[IteratedString]], [[IteratedStringNextSegmentCodeUnitIndex]] &raquo;.
-        1. Let _iterator_ be ! ObjectCreate(%SegmentIterator.prototype%, _internalSlotsList_).
+        1. Let _iterator_ be ! OrdinaryObjectCreate(%SegmentIterator.prototype%, _internalSlotsList_).
         1. Set _iterator_.[[IteratingSegmenter]] to _segmenter_.
         1. Set _iterator_.[[IteratedString]] to _string_.
         1. Set _iterator_.[[IteratedStringNextSegmentCodeUnitIndex]] to 0.
@@ -401,7 +398,7 @@ document.addEventListener("DOMContentLoaded", function() {
         1. Assert: _startIndex_ &ge; 0.
         1. Assert: _endIndex_ &le; _len_.
         1. Assert: _startIndex_ &lt; _endIndex_.
-        1. Let _result_ be ! ObjectCreate(%Object.prototype%).
+        1. Let _result_ be ! OrdinaryObjectCreate(%Object.prototype%).
         1. Let _segment_ be the String value equal to the substring of _string_ consisting of the code units at indices _startIndex_ (inclusive) through _endIndex_ (exclusive).
         1. Perform ! CreateDataPropertyOrThrow(_result_, *"segment"*, _segment_).
         1. Perform ! CreateDataPropertyOrThrow(_result_, *"index"*, _startIndex_).
