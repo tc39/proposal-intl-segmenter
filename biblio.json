@@ -25,9 +25,19 @@
       "id": "sec-internal-slots",
       "title": "Internal slots of Service Constructors",
       "number": "9.1"
+    },
+    {
+      "type": "op",
+      "aoid": "GetOptionsObject",
+      "id": "sec-getoptionsobject"
     }
   ],
   "https://tc39.github.io/ecma262/": [
+    {
+      "type": "op",
+      "aoid": "OrdinaryObjectCreate",
+      "id": "sec-ordinaryobjectcreate"
+    },
     {
       "type": "op",
       "aoid": "RequireInternalSlot",

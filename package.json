@@ -13,7 +13,7 @@
   "license": "SEE LICENSE IN https://tc39.github.io/ecma262/#sec-copyright-and-software-license",
   "homepage": "https://tc39.github.io/proposal-intl-segmenter/",
   "dependencies": {
-    "ecmarkup": "^4.2.1"
+    "ecmarkup": "^7.0.2"
   },
   "devDependencies": {
     "@alrra/travis-scripts": "^3.0.0"
