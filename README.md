@@ -159,3 +159,7 @@ No segments will be found, and iterators will complete immediately upon first `n
 
 _Someone's_ in QA. 😉
 The `containing` argument is processed into an integer Number—`null`, `undefined`, and `NaN` become 0, Booleans become 0 or 1, Strings are parsed as string numeric literals, Objects are cast to primitives, and Symbols and BigInts fail with a TypeError exception. Fractional components are truncated, but infinite Numbers are accepted as-is (although they are always out of bounds and will therefore never find a segment).
+
+## Implementations
+* [V8](https://bugs.chromium.org/p/v8/issues/detail?id=6891), shipping in Chrome 88
+* [JavaScriptCore](https://bugs.webkit.org/show_bug.cgi?id=213638), shipping in [Safari Technology Preview Release 114](https://developer.apple.com/safari/technology-preview/release-notes/#r114)
