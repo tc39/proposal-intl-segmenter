@@ -1,6 +1,6 @@
 # `Intl.Segmenter`: Unicode segmentation in JavaScript
 
-Stage 3 proposal, champion Richard Gibson
+Stage 4 proposal, champion Richard Gibson
 
 ## Motivation
 
